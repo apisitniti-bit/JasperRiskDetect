@@ -1,0 +1,21 @@
+{
+  "name": "@jasper-risk-detect/cli",
+  "version": "1.0.0",
+  "private": true,
+  "bin": {
+    "jasper-risk-detect": "./bin/jasper-risk-detect.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "lint": "tsc --noEmit",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "@jasper-risk-detect/engine": "*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.5.0"
+  }
+}

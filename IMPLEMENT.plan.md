@@ -422,7 +422,7 @@ const [layoutResult, compileResult] = await Promise.all([
 | `uuid` attribute บน `<jasperReport>` | มี | JasperReports ≥4.1.1 | **ปฏิเสธ** + Thai error |
 | `xmlns` = `http://jasperreports.sourceforge.net/jasperreports` | มี | ทุกเวอร์ชัน (compatible) | ผ่าน |
 | `<genericElement>` tag | มี | ≥3.5.0 (ต้องตรวจเพิ่ม) | เตือน |
-| `columnWidth` attribute บน `<jasperReport>` | มี | ≥4.0.0 | **ปฏิเสธ** |
+| `<propertyExpression>` element | มี | ≥4.0.0 | **ปฏิเสธ** |
 | `<style>` มี `markup` attribute ค่า `styled` | มี | ≥4.0.0 | **ปฏิเสธ** |
 | `whenNoDataType="NoDataSection"` | มี | ≥3.7.5 | **ปฏิเสธ** |
 | Java expression ใน `<![CDATA[...]]>` ใช้ syntax ≥Java 8 | มี | ไม่รองรับ | **ปฏิเสธ** |

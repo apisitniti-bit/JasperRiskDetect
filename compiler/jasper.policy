@@ -1,0 +1,17 @@
+// Java Security Policy for JasperRiskDetect Compile Sandbox
+// Phase 2: SecurityManager deny-all baseline — grant only minimum permissions
+
+grant {
+    // Read access to JasperReports JARs and JRXML input files
+    // permission java.io.FilePermission "<<ALL FILES>>", "read";
+
+    // Deny all network access
+    // No java.net.SocketPermission granted
+
+    // Deny all file write outside temp
+    // No java.io.FilePermission "write" granted except /tmp
+
+    // Basic runtime permissions for JasperReports compilation
+    permission java.lang.RuntimePermission "createClassLoader";
+    permission java.util.PropertyPermission "*", "read";
+};

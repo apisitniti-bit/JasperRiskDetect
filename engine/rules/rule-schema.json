@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "JasperRiskDetect Rule",
+  "description": "Schema for layout and compile analysis rules targeting iReport 3.7.1",
+  "type": "object",
+  "required": ["rule_id", "severity", "category", "detection", "risk_weight", "thai"],
+  "properties": {
+    "rule_id": {
+      "type": "string",
+      "pattern": "^(LAYOUT|COMPILE)-\\d{3}$"
+    },
+    "severity": {
+      "type": "string",
+      "enum": ["critical", "high", "medium", "low", "info"]
+    },
+    "category": {
+      "type": "string",
+      "enum": ["layout", "compile"]
+    },
+    "detection": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["xpath", "element_count", "attribute_check", "expression_pattern", "structural"]
+        },
+        "config": {
+          "type": "object"
+        }
+      }
+    },
+    "risk_weight": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 25
+    },
+    "thai": {
+      "type": "object",
+      "required": ["title", "cause", "impact", "fix"],
+      "properties": {
+        "title": { "type": "string" },
+        "cause": { "type": "string" },
+        "impact": { "type": "string" },
+        "fix": { "type": "string" }
+      }
+    },
+    "autofix": {
+      "type": "object",
+      "properties": {
+        "available": { "type": "boolean" },
+        "strategy": { "type": "string" },
+        "safe": { "type": "boolean" }
+      }
+    }
+  }
+}
