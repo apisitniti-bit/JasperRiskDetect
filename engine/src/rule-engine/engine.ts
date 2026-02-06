@@ -104,9 +104,11 @@ export function enrichFindings(
         line: finding.line,
         column: finding.column,
         element: finding.element,
+        element_name: finding.element_name,
         message: finding.message,
         thai: rule.thai,
         risk_weight: rule.risk_weight,
+        details: finding.details,
       });
     } else {
       // Keep finding as-is if no matching rule

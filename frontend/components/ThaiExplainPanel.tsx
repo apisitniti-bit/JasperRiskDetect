@@ -1,6 +1,7 @@
 "use client";
 
-import { BookOpen, ArrowRight, Wrench, Zap } from "lucide-react";
+import { useState } from "react";
+import { BookOpen, ArrowRight, Wrench, Zap, ChevronRight, List } from "lucide-react";
 import type { Finding } from "../lib/types";
 
 interface ThaiExplainPanelProps {
@@ -16,7 +17,7 @@ export default function ThaiExplainPanel({ finding }: ThaiExplainPanelProps) {
           <span>คำอธิบายภาษาไทย</span>
         </div>
         <div className="panel-body flex items-center justify-center">
-          <span className="text-xs text-ide-text-muted">
+          <span className="text-sm text-ide-text-muted">
             เลือกปัญหาจากรายการด้านซ้ายเพื่อดูคำอธิบาย
           </span>
         </div>
@@ -54,7 +55,7 @@ export default function ThaiExplainPanel({ finding }: ThaiExplainPanelProps) {
         />
 
         {finding.line && (
-          <div className="rounded bg-ide-bg px-3 py-2 text-xs">
+          <div className="rounded bg-ide-bg px-3 py-2 text-sm">
             <span className="text-ide-text-muted">ตำแหน่ง: </span>
             <span className="font-mono text-ide-text">
               บรรทัด {finding.line}
@@ -64,12 +65,58 @@ export default function ThaiExplainPanel({ finding }: ThaiExplainPanelProps) {
         )}
 
         {finding.element && (
-          <div className="rounded bg-ide-bg px-3 py-2 text-xs">
-            <span className="text-ide-text-muted">Element: </span>
+          <div className="rounded bg-ide-bg px-3 py-2 text-sm">
+            <span className="text-ide-text-muted">Band: </span>
             <code className="font-mono text-ide-accent">{finding.element}</code>
           </div>
         )}
+
+        {finding.element_name && (
+          <div className="rounded bg-ide-bg px-3 py-2 text-sm">
+            <span className="text-ide-text-muted">Expression / Text: </span>
+            <code className="break-all font-mono text-sky-300">{finding.element_name}</code>
+          </div>
+        )}
+
+        {/* Full element listing from details */}
+        <ElementListing elements={getElementsFromDetails(finding)} />
       </div>
+    </div>
+  );
+}
+
+function getElementsFromDetails(finding: Finding): string[] {
+  if (!finding.details) return [];
+  const els = finding.details["elements"];
+  if (Array.isArray(els)) return els.map(String);
+  return [];
+}
+
+function ElementListing({ elements }: { elements: string[] }) {
+  const [open, setOpen] = useState(false);
+
+  if (elements.length === 0) return null;
+
+  return (
+    <div className="rounded bg-ide-bg px-3 py-2">
+      <button
+        type="button"
+        onClick={() => setOpen((p) => !p)}
+        className="flex w-full items-center gap-1.5 text-sm font-semibold text-ide-text-muted hover:text-ide-text"
+      >
+        <ChevronRight className={`h-3 w-3 shrink-0 transition-transform duration-150 ${open ? "rotate-90" : ""}`} />
+        <List className="h-3 w-3" />
+        <span>Text Fields ในแถบนี้ ({elements.length})</span>
+      </button>
+      {open && (
+        <ul className="mt-2 max-h-48 space-y-0.5 overflow-y-auto pl-5">
+          {elements.map((el, i) => (
+            <li key={i} className="text-xs">
+              <code className="font-mono text-sky-300">{el}</code>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
@@ -87,11 +134,11 @@ function Section({
     <div className="rounded bg-ide-bg p-2.5">
       <div className="mb-1 flex items-center gap-1.5">
         {icon}
-        <span className="text-[10px] font-semibold uppercase tracking-wider text-ide-text-muted">
+        <span className="text-xs font-semibold uppercase tracking-wider text-ide-text-muted">
           {label}
         </span>
       </div>
-      <p className="text-xs leading-relaxed text-ide-text">{text}</p>
+      <p className="text-sm leading-relaxed text-ide-text">{text}</p>
     </div>
   );
 }

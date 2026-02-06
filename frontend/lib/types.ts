@@ -16,9 +16,11 @@ export interface Finding {
   line?: number;
   column?: number;
   element?: string;
+  element_name?: string;
   message: string;
   thai: ThaiMessages;
   risk_weight: number;
+  details?: Record<string, unknown>;
 }
 
 export interface VersionSignal {
@@ -45,6 +47,17 @@ export interface FixProposal {
   safe: boolean;
 }
 
+export interface JrxmlParamInfo {
+  name: string;
+  className: string;
+}
+
+export interface JrxmlVarInfo {
+  name: string;
+  className: string;
+  expression?: string;
+}
+
 export interface AnalysisResult {
   file_id: string;
   file_name: string;
@@ -54,6 +67,9 @@ export interface AnalysisResult {
   final_score: number;
   risk_level: RiskLevel;
   findings: Finding[];
+  parameters?: JrxmlParamInfo[];
+  fields?: JrxmlParamInfo[];
+  variables?: JrxmlVarInfo[];
   jrxml_content?: string;
   fix_proposals?: FixProposal[];
   diff?: string;

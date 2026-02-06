@@ -41,10 +41,16 @@ export function scoreFindings(findings: Finding[]): ScoreBreakdown {
 
   const layoutScore = calculateCategoryScore(layoutFindings);
   const compileScore = calculateCategoryScore(compileFindings);
-  const finalScore = Math.max(layoutScore, compileScore);
+  let finalScore = Math.max(layoutScore, compileScore);
+
+  // Any critical finding → force score 100 immediately
+  const hasCritical = findings.some((f) => f.severity === "critical");
+  if (hasCritical) {
+    finalScore = 100;
+  }
 
   return {
-    layout_score: layoutScore,
+    layout_score: hasCritical ? 100 : layoutScore,
     compile_score: compileScore,
     final_score: finalScore,
     risk_level: calculateRiskLevel(finalScore),

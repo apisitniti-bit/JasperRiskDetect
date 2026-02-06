@@ -23,6 +23,7 @@ function layoutToFinding(lf: LayoutFinding): Finding {
     category: "layout",
     line: lf.line,
     element: lf.band_type,
+    element_name: lf.element_name,
     message: lf.message,
     thai: {
       title: lf.thai_message,
@@ -31,6 +32,7 @@ function layoutToFinding(lf: LayoutFinding): Finding {
       fix: "",
     },
     risk_weight: 0,
+    details: lf.details,
   };
 }
 
@@ -75,9 +77,15 @@ export async function GET(req: NextRequest) {
 
     // 2. Layout analysis — analyzeLayout takes raw XML string
     let findings: Finding[] = [];
+    let parameters: { name: string; className: string }[] = [];
+    let fields: { name: string; className: string }[] = [];
+    let variables: { name: string; className: string; expression?: string }[] = [];
     try {
       const layoutResult = analyzeLayout(rawXml);
       findings = layoutResult.findings.map(layoutToFinding);
+      parameters = layoutResult.ast.parameters.map((p) => ({ name: p.name, className: p.className }));
+      fields = layoutResult.ast.fields.map((f) => ({ name: f.name, className: f.className }));
+      variables = layoutResult.ast.variables.map((v) => ({ name: v.name, className: v.className, expression: v.expression }));
     } catch {
       // Layout parse failed — continue with empty findings
     }
@@ -101,6 +109,9 @@ export async function GET(req: NextRequest) {
       final_score: score.final_score,
       risk_level: score.risk_level,
       findings,
+      parameters,
+      fields,
+      variables,
       jrxml_content: rawXml,
     });
   } catch (err) {

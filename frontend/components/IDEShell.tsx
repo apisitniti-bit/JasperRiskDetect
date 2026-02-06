@@ -14,6 +14,7 @@ import type { Finding } from "../lib/types";
 export default function IDEShell() {
   const [showUpload, setShowUpload] = useState(false);
   const [selectedFinding, setSelectedFinding] = useState<Finding | null>(null);
+  const [dragOver, setDragOver] = useState(false);
 
   const { upload, uploading, uploadError, uploadResult, reset: resetUpload } = useUpload();
   const { analysis, isLoading } = useAnalysis(uploadResult?.file_id ?? null);
@@ -37,6 +38,33 @@ export default function IDEShell() {
     [upload]
   );
 
+  const handleRefresh = useCallback(() => {
+    resetUpload();
+    setSelectedFinding(null);
+  }, [resetUpload]);
+
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      setDragOver(false);
+      const file = e.dataTransfer.files[0];
+      if (file && file.name.endsWith(".jrxml")) {
+        handleFileSelected(file);
+      }
+    },
+    [handleFileSelected]
+  );
+
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(true);
+  }, []);
+
+  const handleDragLeave = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(false);
+  }, []);
+
   // Per SKILL.md: rerender-functional-setstate
   const handleSelectFinding = useCallback((finding: Finding) => {
     setSelectedFinding((curr) => (curr === finding ? null : finding));
@@ -48,13 +76,32 @@ export default function IDEShell() {
   const riskLevel = analysis?.risk_level ?? "LOW";
   const jrxmlContent = analysis?.jrxml_content ?? null;
   const fileName = uploadResult?.file_name ?? null;
+  const parameters = analysis?.parameters ?? [];
+  const fields = analysis?.fields ?? [];
+  const variables = analysis?.variables ?? [];
 
   return (
-    <div className="flex h-screen w-screen flex-col overflow-hidden">
+    <div
+      className="flex h-screen w-screen flex-col overflow-hidden"
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+    >
+      {/* Drag overlay */}
+      {dragOver && (
+        <div className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="rounded-xl border-2 border-dashed border-ide-accent bg-ide-sidebar/90 px-12 py-8 text-center">
+            <p className="text-lg font-semibold text-ide-accent">วางไฟล์ .jrxml ที่นี่</p>
+            <p className="mt-1 text-xs text-ide-text-muted">ปล่อยเพื่ออัปโหลดและวิเคราะห์</p>
+          </div>
+        </div>
+      )}
+
       {/* Top Bar */}
       <TopBar
         fileName={fileName}
         onUploadClick={handleUploadClick}
+        onRefresh={handleRefresh}
         isAnalyzing={isLoading}
       />
 
@@ -92,6 +139,9 @@ export default function IDEShell() {
             layoutScore={layoutScore}
             compileScore={compileScore}
             riskLevel={riskLevel}
+            parameters={parameters}
+            fields={fields}
+            variables={variables}
           />
         </div>
       </div>

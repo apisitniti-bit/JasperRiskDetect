@@ -3,7 +3,6 @@ import type { JrxmlAst } from "./parsers/jrxml-parser";
 import type { LayoutFinding, LayoutCheck } from "./types";
 
 import { checkBandOverflow } from "./checks/band-overflow";
-import { checkElementOverlap } from "./checks/element-overlap";
 import { checkMemoryEstimation } from "./checks/memory-estimation";
 import { checkSubreportDepth } from "./checks/subreport-depth";
 import { checkImageSize } from "./checks/image-size";
@@ -16,7 +15,6 @@ import { checkOverflowOutsideDetail } from "./checks/overflow-outside-detail";
 
 const ALL_CHECKS: LayoutCheck[] = [
   checkBandOverflow,
-  checkElementOverlap,
   checkMemoryEstimation,
   checkSubreportDepth,
   checkImageSize,

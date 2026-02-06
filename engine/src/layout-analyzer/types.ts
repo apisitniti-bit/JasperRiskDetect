@@ -6,6 +6,7 @@ export interface LayoutFinding {
   message: string;
   thai_message: string;
   band_type?: string;
+  element_name?: string;
   element_index?: number;
   line?: number;
   details: Record<string, unknown>;

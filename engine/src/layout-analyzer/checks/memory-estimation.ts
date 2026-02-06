@@ -1,5 +1,6 @@
 import type { JrxmlAst } from "../parsers/jrxml-parser";
 import type { LayoutFinding } from "../types";
+import { getElementLabel } from "./element-label";
 
 const MEMORY_PER_ELEMENT_KB: Record<string, number> = {
   staticText: 2,
@@ -52,13 +53,29 @@ export function checkMemoryEstimation(ast: JrxmlAst): LayoutFinding[] {
     }
   }
 
+  // Collect all element labels for display
+  const allLabels: string[] = [];
+  for (const band of ast.bands) {
+    for (const el of band.elements) {
+      allLabels.push(getElementLabel(el));
+    }
+  }
+  for (const group of ast.groups) {
+    for (const b of [...group.headerBands, ...group.footerBands]) {
+      for (const el of b.elements) {
+        allLabels.push(getElementLabel(el));
+      }
+    }
+  }
+
   if (totalKB >= CRITICAL_THRESHOLD_KB) {
     findings.push({
       check_id: "LAYOUT-003",
       severity: "critical",
       message: `Estimated memory per page: ${totalKB} KB (${ast.totalElementCount} elements) exceeds critical threshold ${CRITICAL_THRESHOLD_KB} KB`,
       thai_message: `ประมาณการใช้หน่วยความจำต่อหน้า: ${totalKB} KB (${ast.totalElementCount} elements) เกินเกณฑ์วิกฤต ${CRITICAL_THRESHOLD_KB} KB — เสี่ยง OutOfMemoryError`,
-      details: { estimated_kb: totalKB, element_count: ast.totalElementCount, breakdown },
+      element_name: allLabels.slice(0, 3).join(", ") + (allLabels.length > 3 ? ` +${allLabels.length - 3}` : ""),
+      details: { estimated_kb: totalKB, element_count: ast.totalElementCount, breakdown, elements: allLabels },
     });
   } else if (totalKB >= WARN_THRESHOLD_KB) {
     findings.push({
@@ -66,7 +83,8 @@ export function checkMemoryEstimation(ast: JrxmlAst): LayoutFinding[] {
       severity: "high",
       message: `Estimated memory per page: ${totalKB} KB (${ast.totalElementCount} elements) exceeds warning threshold ${WARN_THRESHOLD_KB} KB`,
       thai_message: `ประมาณการใช้หน่วยความจำต่อหน้า: ${totalKB} KB (${ast.totalElementCount} elements) เกินเกณฑ์เตือน ${WARN_THRESHOLD_KB} KB — อาจมีปัญหาเมื่อข้อมูลมาก`,
-      details: { estimated_kb: totalKB, element_count: ast.totalElementCount, breakdown },
+      element_name: allLabels.slice(0, 3).join(", ") + (allLabels.length > 3 ? ` +${allLabels.length - 3}` : ""),
+      details: { estimated_kb: totalKB, element_count: ast.totalElementCount, breakdown, elements: allLabels },
     });
   }
 

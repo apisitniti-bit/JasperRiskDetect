@@ -46,9 +46,11 @@ export interface Finding {
   line?: number;
   column?: number;
   element?: string;
+  element_name?: string;
   message: string;
   thai: ThaiMessages;
   risk_weight: number;
+  details?: Record<string, unknown>;
 }
 
 export interface AnalysisResult {

@@ -1,5 +1,6 @@
 import type { JrxmlAst } from "../parsers/jrxml-parser";
 import type { LayoutFinding } from "../types";
+import { getElementLabel } from "./element-label";
 
 const ASSUMED_MAX_ROWS = 10_000;
 const MEMORY_PER_ROW_BYTE = 512;
@@ -26,6 +27,9 @@ export function checkPaginationRisk(ast: JrxmlAst): LayoutFinding[] {
       (ASSUMED_MAX_ROWS * elementsPerRow * MEMORY_PER_ROW_BYTE) / (1024 * 1024)
     );
 
+    const allLabels = detail.elements.map((e) => getElementLabel(e));
+    const elSummary = allLabels.slice(0, 3).join(", ") + (allLabels.length > 3 ? ` +${allLabels.length - 3}` : "");
+
     if (estimatedMemoryMB >= CRITICAL_THRESHOLD_MB) {
       findings.push({
         check_id: "LAYOUT-006",
@@ -33,6 +37,7 @@ export function checkPaginationRisk(ast: JrxmlAst): LayoutFinding[] {
         message: `Pagination risk: detail band (${detail.height}px, ${elementsPerRow} elements) × ${ASSUMED_MAX_ROWS} rows ≈ ${estimatedMemoryMB} MB (${estimatedPages} pages)`,
         thai_message: `ความเสี่ยงด้านหน้ากระดาษ: แถบ detail (สูง ${detail.height}px, ${elementsPerRow} elements) × ${ASSUMED_MAX_ROWS} แถว ≈ ${estimatedMemoryMB} MB — เกินเกณฑ์วิกฤต ${CRITICAL_THRESHOLD_MB} MB เสี่ยง Java Heap Space`,
         band_type: "detail",
+        element_name: elSummary,
         details: {
           detail_height: detail.height,
           elements_per_row: elementsPerRow,
@@ -40,6 +45,7 @@ export function checkPaginationRisk(ast: JrxmlAst): LayoutFinding[] {
           estimated_pages: estimatedPages,
           estimated_memory_mb: estimatedMemoryMB,
           rows_per_page: rowsPerPage,
+          elements: allLabels,
         },
       });
     } else if (estimatedMemoryMB >= WARN_THRESHOLD_MB) {
@@ -49,6 +55,7 @@ export function checkPaginationRisk(ast: JrxmlAst): LayoutFinding[] {
         message: `Pagination risk: detail band (${detail.height}px, ${elementsPerRow} elements) × ${ASSUMED_MAX_ROWS} rows ≈ ${estimatedMemoryMB} MB (${estimatedPages} pages)`,
         thai_message: `ความเสี่ยงด้านหน้ากระดาษ: แถบ detail (สูง ${detail.height}px, ${elementsPerRow} elements) × ${ASSUMED_MAX_ROWS} แถว ≈ ${estimatedMemoryMB} MB — เกินเกณฑ์เตือน ${WARN_THRESHOLD_MB} MB`,
         band_type: "detail",
+        element_name: elSummary,
         details: {
           detail_height: detail.height,
           elements_per_row: elementsPerRow,
@@ -56,6 +63,7 @@ export function checkPaginationRisk(ast: JrxmlAst): LayoutFinding[] {
           estimated_pages: estimatedPages,
           estimated_memory_mb: estimatedMemoryMB,
           rows_per_page: rowsPerPage,
+          elements: allLabels,
         },
       });
     }

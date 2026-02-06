@@ -290,11 +290,11 @@ describe("Risk Scorer", function () {
       },
     ];
     const result = scoreFindings(findings);
-    assert.equal(result.layout_score, 20);
+    assert.equal(result.layout_score, 100); // critical → forced 100
     assert.equal(result.compile_score, 60);
-    assert.equal(result.final_score, 60); // max(20, 60)
-    assert.equal(result.risk_level, "HIGH");
-    assert.equal(result.ci_should_fail, false); // 60 < 80
+    assert.equal(result.final_score, 100); // critical → forced 100
+    assert.equal(result.risk_level, "CRITICAL");
+    assert.equal(result.ci_should_fail, true); // 100 >= 80
   });
 
   it("should flag CI failure at score >= 80", function () {
@@ -333,8 +333,8 @@ describe("Risk Scorer", function () {
       },
     ];
     const result = scoreFindings(findings);
-    assert.equal(result.layout_score, 92);
-    assert.equal(result.final_score, 92);
+    assert.equal(result.layout_score, 100); // critical → forced 100
+    assert.equal(result.final_score, 100); // critical → forced 100
     assert.equal(result.risk_level, "CRITICAL");
     assert.equal(result.ci_should_fail, true);
   });

@@ -1,5 +1,6 @@
 import type { JrxmlAst } from "../parsers/jrxml-parser";
 import type { LayoutFinding } from "../types";
+import { getElementLabel } from "./element-label";
 
 const MAX_EMBEDDED_IMAGE_KB = 500;
 
@@ -23,6 +24,7 @@ export function checkImageSize(ast: JrxmlAst): LayoutFinding[] {
           message: `Embedded base64 image in band "${band.type}" is ~${sizeKB} KB (threshold: ${MAX_EMBEDDED_IMAGE_KB} KB)`,
           thai_message: `พบรูปภาพแบบ base64 ฝังในแถบ "${band.type}" ขนาดประมาณ ${sizeKB} KB (เกณฑ์: ${MAX_EMBEDDED_IMAGE_KB} KB) — จะใช้หน่วยความจำมากทุกหน้าที่พิมพ์`,
           band_type: band.type,
+          element_name: getElementLabel(el),
           details: { estimated_size_kb: sizeKB, threshold_kb: MAX_EMBEDDED_IMAGE_KB },
         });
       }

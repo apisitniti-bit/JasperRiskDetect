@@ -18,7 +18,9 @@ export interface JrxmlElement {
   y: number;
   width: number;
   height: number;
+  key?: string;
   expression?: string;
+  textContent?: string;
   isStretchWithOverflow?: boolean;
   isPrintWhenDetailOverflows?: boolean;
   imageExpression?: string;
@@ -30,6 +32,12 @@ export interface JrxmlBand {
   height: number;
   elements: JrxmlElement[];
   splitType?: string;
+}
+
+export interface JrxmlParameter {
+  name: string;
+  className: string;
+  defaultValueExpression?: string;
 }
 
 export interface JrxmlField {
@@ -67,6 +75,7 @@ export interface JrxmlSubreport {
 export interface JrxmlAst {
   page: JrxmlPage;
   bands: JrxmlBand[];
+  parameters: JrxmlParameter[];
   fields: JrxmlField[];
   variables: JrxmlVariable[];
   groups: JrxmlGroup[];
@@ -158,6 +167,18 @@ function parseElements(bandObj: Record<string, unknown>): JrxmlElement[] {
 
       if (getStrAttr(re, "isPrintWhenDetailOverflows", "") === "true") {
         el.isPrintWhenDetailOverflows = true;
+      }
+
+      const keyAttr = getStrAttr(re, "key", "");
+      if (keyAttr) {
+        el.key = keyAttr;
+      }
+
+      if (tag === "staticText") {
+        const textNode = item["text"];
+        if (textNode !== undefined) {
+          el.textContent = extractExpression(textNode);
+        }
       }
 
       if (tag === "textField") {
@@ -287,6 +308,15 @@ export function parseJrxml(rawXml: string): JrxmlAst {
     }
   }
 
+  // Parameters
+  const parameters: JrxmlParameter[] = toArray(root["parameter"]).map(function (p: Record<string, unknown>) {
+    return {
+      name: getStrAttr(p, "name", ""),
+      className: getStrAttr(p, "class", "java.lang.String"),
+      defaultValueExpression: p["defaultValueExpression"] ? extractExpression(p["defaultValueExpression"]) : undefined,
+    };
+  });
+
   // Fields
   const fields: JrxmlField[] = toArray(root["field"]).map(function (f: Record<string, unknown>) {
     return {
@@ -366,6 +396,7 @@ export function parseJrxml(rawXml: string): JrxmlAst {
   return {
     page,
     bands,
+    parameters,
     fields,
     variables,
     groups,

@@ -54,7 +54,7 @@ export default function FileUploadModal({
         <h2 className="mb-4 text-lg font-semibold text-ide-text">
           อัปโหลดไฟล์ JRXML
         </h2>
-        <p className="mb-4 text-xs text-ide-text-muted">
+        <p className="mb-4 text-sm text-ide-text-muted">
           รองรับเฉพาะ .jrxml สำหรับ iReport 3.7.1 เท่านั้น (ขนาดไม่เกิน 5MB)
         </p>
 
@@ -83,7 +83,7 @@ export default function FileUploadModal({
               <span className="text-sm text-ide-text-muted">
                 ลากไฟล์มาวางที่นี่ หรือคลิกเพื่อเลือกไฟล์
               </span>
-              <span className="text-xs text-ide-text-muted">.jrxml</span>
+              <span className="text-sm text-ide-text-muted">.jrxml</span>
             </>
           )}
         </div>
@@ -97,7 +97,7 @@ export default function FileUploadModal({
         />
 
         {error && (
-          <div className="mt-3 flex items-center gap-2 rounded bg-ide-error/10 px-3 py-2 text-xs text-ide-error">
+          <div className="mt-3 flex items-center gap-2 rounded bg-ide-error/10 px-3 py-2 text-sm text-ide-error">
             <AlertCircle className="h-4 w-4 shrink-0" />
             {error}
           </div>

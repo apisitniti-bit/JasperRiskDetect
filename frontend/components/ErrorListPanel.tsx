@@ -94,7 +94,7 @@ export default function ErrorListPanel({
       <div className="panel-header">
         <AlertTriangle className="h-3.5 w-3.5" />
         <span>ปัญหาที่พบ ({findings.length})</span>
-        <div className="ml-auto flex items-center gap-2 text-[10px]">
+        <div className="ml-auto flex items-center gap-2 text-xs">
           {criticalCount > 0 && (
             <span className="rounded bg-ide-error/20 px-1.5 py-0.5 text-ide-error">
               {criticalCount} วิกฤต
@@ -117,7 +117,7 @@ export default function ErrorListPanel({
         {findings.length === 0 ? (
           <div className="flex h-full flex-col items-center justify-center gap-2 text-ide-text-muted">
             <Info className="h-8 w-8 opacity-30" />
-            <span className="text-xs">ยังไม่มีผลการวิเคราะห์</span>
+            <span className="text-sm">ยังไม่มีผลการวิเคราะห์</span>
           </div>
         ) : (
           <div>
@@ -131,7 +131,7 @@ export default function ErrorListPanel({
                   <button
                     type="button"
                     onClick={() => toggleGroup(severity)}
-                    className={`sticky top-0 z-10 flex w-full items-center gap-1.5 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider select-none ${SEVERITY_GROUP_BG[severity]}`}
+                    className={`sticky top-0 z-10 flex w-full items-center gap-1.5 px-3 py-1.5 text-xs font-bold uppercase tracking-wider select-none ${SEVERITY_GROUP_BG[severity]}`}
                   >
                     <ChevronRight
                       className={`h-3 w-3 shrink-0 transition-transform duration-150 ${isOpen ? "rotate-90" : ""}`}
@@ -159,16 +159,26 @@ export default function ErrorListPanel({
                             <Icon className={`mt-0.5 h-4 w-4 shrink-0 ${colorClass}`} />
                             <div className="min-w-0 flex-1">
                               <div className="flex items-center gap-1.5">
-                                <span className={`text-xs font-semibold ${colorClass}`}>
+                                <span className={`text-sm font-semibold ${colorClass}`}>
                                   {finding.rule_id}
                                 </span>
+                                {finding.element && (
+                                  <span className="rounded bg-ide-bg px-1 text-xs text-ide-accent">
+                                    {finding.element}
+                                  </span>
+                                )}
                                 {finding.line && (
-                                  <span className="text-[10px] text-ide-text-muted">
-                                    บรรทัด {finding.line}
+                                  <span className="text-xs text-ide-text-muted">
+                                    :{finding.line}
                                   </span>
                                 )}
                               </div>
-                              <p className="mt-0.5 text-xs text-ide-text line-clamp-2">
+                              {finding.element_name && (
+                                <p className="mt-0.5 truncate font-mono text-xs text-sky-300/80">
+                                  {finding.element_name}
+                                </p>
+                              )}
+                              <p className="mt-0.5 text-sm text-ide-text line-clamp-1">
                                 {finding.thai.title}
                               </p>
                             </div>

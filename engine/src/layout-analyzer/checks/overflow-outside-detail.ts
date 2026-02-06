@@ -1,5 +1,6 @@
 import type { JrxmlAst } from "../parsers/jrxml-parser";
 import type { LayoutFinding } from "../types";
+import { getElementLabel } from "./element-label";
 
 const NON_DETAIL_BANDS = [
   "title",
@@ -23,12 +24,14 @@ export function checkOverflowOutsideDetail(ast: JrxmlAst): LayoutFinding[] {
 
     for (const el of band.elements) {
       if (el.isPrintWhenDetailOverflows) {
+        const label = getElementLabel(el);
         findings.push({
           check_id: "LAYOUT-027",
           severity: "critical",
           message: `Element "${el.type}" in "${band.type}" band has isPrintWhenDetailOverflows="true" — risk of Java Heap Space`,
           thai_message: `Element "${el.type}" ใน Band "${band.type}" ตั้งค่า isPrintWhenDetailOverflows="true" — Band นี้ไม่มีกลไก pagination เสี่ยง Java Heap Space อย่างร้ายแรง`,
           band_type: band.type,
+          element_name: label,
           element_index: band.elements.indexOf(el),
           details: {
             element_type: el.type,
@@ -47,12 +50,14 @@ export function checkOverflowOutsideDetail(ast: JrxmlAst): LayoutFinding[] {
     for (const band of allBands) {
       for (const el of band.elements) {
         if (el.isPrintWhenDetailOverflows) {
+          const label = getElementLabel(el);
           findings.push({
             check_id: "LAYOUT-027",
             severity: "critical",
             message: `Element "${el.type}" in group "${group.name}" ${band.type} has isPrintWhenDetailOverflows="true" — risk of Java Heap Space`,
             thai_message: `Element "${el.type}" ใน ${band.type} ของกลุ่ม "${group.name}" ตั้งค่า isPrintWhenDetailOverflows="true" — เสี่ยง Java Heap Space เนื่องจากไม่มีกลไก pagination`,
             band_type: band.type,
+            element_name: label,
             element_index: band.elements.indexOf(el),
             details: {
               element_type: el.type,
