@@ -138,8 +138,8 @@ function validateSingleRule(rule: unknown, index: number): ValidationError[] {
       if (typeof af["available"] !== "boolean") {
         errors.push({ rule_id: id, field: "autofix.available", message: "autofix.available must be a boolean" });
       }
-      if (typeof af["strategy"] !== "string") {
-        errors.push({ rule_id: id, field: "autofix.strategy", message: "autofix.strategy must be a string" });
+      if (typeof af["strategy"] !== "string" && af["strategy"] !== null) {
+        errors.push({ rule_id: id, field: "autofix.strategy", message: "autofix.strategy must be a string or null" });
       }
       if (typeof af["safe"] !== "boolean") {
         errors.push({ rule_id: id, field: "autofix.safe", message: "autofix.safe must be a boolean" });

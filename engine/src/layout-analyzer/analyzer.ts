@@ -12,6 +12,7 @@ import { checkExpressionComplexity } from "./checks/expression-complexity";
 import { checkFieldCount } from "./checks/field-count";
 import { checkVariableDependency } from "./checks/variable-dependency";
 import { checkGroupNesting } from "./checks/group-nesting";
+import { checkOverflowOutsideDetail } from "./checks/overflow-outside-detail";
 
 const ALL_CHECKS: LayoutCheck[] = [
   checkBandOverflow,
@@ -24,6 +25,7 @@ const ALL_CHECKS: LayoutCheck[] = [
   checkFieldCount,
   checkVariableDependency,
   checkGroupNesting,
+  checkOverflowOutsideDetail,
 ];
 
 export interface LayoutAnalysisResult {

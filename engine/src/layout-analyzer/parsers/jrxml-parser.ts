@@ -20,6 +20,7 @@ export interface JrxmlElement {
   height: number;
   expression?: string;
   isStretchWithOverflow?: boolean;
+  isPrintWhenDetailOverflows?: boolean;
   imageExpression?: string;
   subreportExpression?: string;
 }
@@ -153,6 +154,10 @@ function parseElements(bandObj: Record<string, unknown>): JrxmlElement[] {
 
       if (getStrAttr(re, "stretchType", "") !== "") {
         el.isStretchWithOverflow = true;
+      }
+
+      if (getStrAttr(re, "isPrintWhenDetailOverflows", "") === "true") {
+        el.isPrintWhenDetailOverflows = true;
       }
 
       if (tag === "textField") {

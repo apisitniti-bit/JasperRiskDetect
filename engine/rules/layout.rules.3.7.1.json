@@ -340,5 +340,19 @@
       "impact": "อาจเป็นปัญหาด้านความปลอดภัย หรือโหลด class ที่ไม่มีใน classpath",
       "fix": "หลีกเลี่ยงการใช้ Class.forName() ใน expression — ใช้ static type แทน"
     }
+  },
+  {
+    "rule_id": "LAYOUT-027",
+    "severity": "critical",
+    "category": "layout",
+    "detection": { "type": "structural", "config": { "check": "overflow-outside-detail" } },
+    "risk_weight": 25,
+    "thai": {
+      "title": "isPrintWhenDetailOverflows ใช้นอก Detail Band — เสี่ยง Java Heap Space",
+      "cause": "ตั้งค่า isPrintWhenDetailOverflows=\"true\" บน element ที่อยู่ใน Band อื่นที่ไม่ใช่ Detail (เช่น pageHeader, title, summary) ซึ่งไม่มีกลไก pagination รองรับ",
+      "impact": "JasperReports จะพยายามขยาย element ไม่หยุด เนื่องจากไม่มี page break mechanism — ทำให้ memory บวมจน java.lang.OutOfMemoryError: Java heap space ส่งผลให้ server ล่ม",
+      "fix": "ลบ isPrintWhenDetailOverflows=\"true\" ออกจาก element ที่อยู่นอก Detail Band หรือย้าย element ไปอยู่ใน Detail Band แทน"
+    },
+    "autofix": { "available": false, "strategy": null, "safe": false }
   }
 ]
