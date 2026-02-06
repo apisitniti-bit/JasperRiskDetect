@@ -1,3 +1,44 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Sarabun:wght@300;400;500;600;700&display=swap');
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+  body {
+    @apply bg-ide-bg text-ide-text font-thai antialiased;
+    overflow: hidden;
+  }
+}
+
+@layer components {
+  .error-item {
+    content-visibility: auto;
+    contain-intrinsic-size: 0 48px;
+  }
+  .panel-header {
+    @apply flex items-center gap-2 px-3 py-1.5 bg-ide-sidebar border-b border-ide-border text-xs font-medium text-ide-text-muted uppercase tracking-wider select-none;
+  }
+  .panel-body {
+    @apply flex-1 overflow-auto;
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #424242;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

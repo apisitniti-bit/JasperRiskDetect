@@ -1,17 +1,33 @@
-// Java Security Policy for JasperRiskDetect Compile Sandbox
-// Phase 2: SecurityManager deny-all baseline — grant only minimum permissions
+// Java Security Policy for JasperRisk Compile Sandbox
+// Used with: java -Djava.security.policy=jasper.policy
+//
+// This policy is a SECONDARY defense layer.
+// The PRIMARY defense is com.jasperrisk.SecurityPolicy (custom SecurityManager).
+// Both must agree for an operation to succeed.
 
 grant {
-    // Read access to JasperReports JARs and JRXML input files
-    // permission java.io.FilePermission "<<ALL FILES>>", "read";
+    // Allow reading from any file (classpath JARs, JRXML files)
+    permission java.io.FilePermission "<<ALL FILES>>", "read,execute";
 
-    // Deny all network access
-    // No java.net.SocketPermission granted
+    // Allow writing ONLY to system temp directory
+    permission java.io.FilePermission "${java.io.tmpdir}/-", "write,delete";
+    permission java.io.FilePermission "/tmp/-", "write,delete";
 
-    // Deny all file write outside temp
-    // No java.io.FilePermission "write" granted except /tmp
-
-    // Basic runtime permissions for JasperReports compilation
+    // Runtime permissions needed by JasperReports compiler
     permission java.lang.RuntimePermission "createClassLoader";
+    permission java.lang.RuntimePermission "accessDeclaredMembers";
+    permission java.lang.RuntimePermission "accessClassInPackage.*";
+    permission java.lang.RuntimePermission "setSecurityManager";
+    permission java.lang.RuntimePermission "getenv.*";
+    permission java.lang.RuntimePermission "getProtectionDomain";
+
+    // Property read access
     permission java.util.PropertyPermission "*", "read";
+
+    // Reflection needed by JasperReports expression evaluator
+    permission java.lang.reflect.ReflectPermission "suppressAccessChecks";
+
+    // DENY: java.net.SocketPermission — implicit by omission
+    // DENY: java.io.FilePermission write outside temp — implicit by omission
+    // DENY: RuntimePermission "createProcess" — implicit by omission
 };

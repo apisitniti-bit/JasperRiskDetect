@@ -1,4 +1,344 @@
-{
-  "_comment": "Phase 1: Layout analysis rules for iReport 3.7.1 — 25+ rules to be populated",
-  "rules": []
-}
+[
+  {
+    "rule_id": "LAYOUT-001",
+    "severity": "critical",
+    "category": "layout",
+    "detection": { "type": "structural", "config": { "check": "band-overflow" } },
+    "risk_weight": 25,
+    "thai": {
+      "title": "แถบ (Band) สูงเกินขนาดหน้ากระดาษ",
+      "cause": "ความสูงของ Band มากกว่าความสูงของหน้ากระดาษลบ margin บนและล่าง",
+      "impact": "ทำให้เกิด Java Heap Space error หรือหน้ากระดาษเสียหายเมื่อ render รายงาน",
+      "fix": "ลดความสูงของ Band หรือย้าย element บางส่วนไปยัง Band อื่น"
+    },
+    "autofix": { "available": true, "strategy": "band-height", "safe": true }
+  },
+  {
+    "rule_id": "LAYOUT-002",
+    "severity": "medium",
+    "category": "layout",
+    "detection": { "type": "structural", "config": { "check": "element-overlap" } },
+    "risk_weight": 5,
+    "thai": {
+      "title": "Element ทับซ้อนกันภายใน Band",
+      "cause": "Element สองตัวขึ้นไปมีพื้นที่ (x,y,width,height) ซ้อนทับกัน",
+      "impact": "ข้อมูลแสดงผลซ้อนทับกัน อาจทำให้อ่านไม่ได้หรือข้อมูลหายไป",
+      "fix": "ปรับตำแหน่งหรือขนาดของ element ไม่ให้ทับซ้อนกัน"
+    },
+    "autofix": { "available": true, "strategy": "element-position", "safe": true }
+  },
+  {
+    "rule_id": "LAYOUT-003",
+    "severity": "critical",
+    "category": "layout",
+    "detection": { "type": "element_count", "config": { "check": "memory-estimation", "threshold_kb": 100000 } },
+    "risk_weight": 20,
+    "thai": {
+      "title": "ประมาณการใช้หน่วยความจำสูงเกินเกณฑ์วิกฤต",
+      "cause": "จำนวนและประเภทของ element ในรายงานใช้หน่วยความจำมากเกินไป",
+      "impact": "เสี่ยง OutOfMemoryError เมื่อ render รายงาน โดยเฉพาะเมื่อมีข้อมูลมาก",
+      "fix": "ลดจำนวน element ในรายงาน หรือแยกเป็นหลาย subreport"
+    }
+  },
+  {
+    "rule_id": "LAYOUT-004",
+    "severity": "high",
+    "category": "layout",
+    "detection": { "type": "element_count", "config": { "check": "subreport-depth", "max_depth": 3 } },
+    "risk_weight": 12,
+    "thai": {
+      "title": "Subreport มากเกินไป",
+      "cause": "รายงานมี subreport จำนวนมาก แต่ละตัวใช้หน่วยความจำเพิ่มเป็นทวีคูณ",
+      "impact": "เสี่ยง Stack Overflow หรือ Heap Exhaustion เมื่อ render",
+      "fix": "ลดจำนวน subreport หรือรวม subreport ที่คล้ายกันเข้าด้วยกัน"
+    }
+  },
+  {
+    "rule_id": "LAYOUT-005",
+    "severity": "high",
+    "category": "layout",
+    "detection": { "type": "attribute_check", "config": { "check": "image-size", "max_kb": 500 } },
+    "risk_weight": 10,
+    "thai": {
+      "title": "รูปภาพ base64 ฝังขนาดใหญ่เกินไป",
+      "cause": "รูปภาพถูกฝังเป็น base64 ในไฟล์ JRXML ขนาดเกิน 500 KB",
+      "impact": "ใช้หน่วยความจำมากทุกหน้าที่พิมพ์ เสี่ยง Heap Spike",
+      "fix": "ใช้ไฟล์รูปภาพภายนอกแทนการฝัง base64 หรือลดขนาดรูปภาพ"
+    }
+  },
+  {
+    "rule_id": "LAYOUT-006",
+    "severity": "critical",
+    "category": "layout",
+    "detection": { "type": "structural", "config": { "check": "pagination-risk" } },
+    "risk_weight": 22,
+    "thai": {
+      "title": "ความเสี่ยงด้านจำนวนหน้ากระดาษ",
+      "cause": "แถบ detail มี element จำนวนมาก คูณจำนวนแถวข้อมูลที่คาดว่าจะมี",
+      "impact": "หน่วยความจำจะเพิ่มขึ้นตามจำนวนหน้า เสี่ยง Java Heap Space",
+      "fix": "ลดจำนวน element ต่อแถว หรือจำกัดจำนวนแถวข้อมูลต่อรายงาน"
+    }
+  },
+  {
+    "rule_id": "LAYOUT-007",
+    "severity": "medium",
+    "category": "layout",
+    "detection": { "type": "expression_pattern", "config": { "check": "expression-complexity", "max_ternary": 3 } },
+    "risk_weight": 5,
+    "thai": {
+      "title": "Expression ซับซ้อนเกินไป (ternary ซ้อน)",
+      "cause": "Expression มี ternary operator ซ้อนกันเกิน 3 ชั้น",
+      "impact": "เสี่ยงทำให้ compile ช้าหรือ timeout",
+      "fix": "แยก expression ออกเป็นหลาย variable หรือใช้ if-else ใน scriptlet"
+    }
+  },
+  {
+    "rule_id": "LAYOUT-008",
+    "severity": "high",
+    "category": "layout",
+    "detection": { "type": "element_count", "config": { "check": "field-count", "critical_threshold": 200 } },
+    "risk_weight": 10,
+    "thai": {
+      "title": "จำนวน Field มากเกินไป",
+      "cause": "รายงานมี field เกิน 200 ตัว แต่ละ field ใช้หน่วยความจำต่อแถวข้อมูล",
+      "impact": "เสี่ยง OutOfMemoryError เมื่อข้อมูลมีจำนวนแถวมาก",
+      "fix": "ลบ field ที่ไม่จำเป็นออก หรือแยกรายงานออกเป็นหลายชุด"
+    }
+  },
+  {
+    "rule_id": "LAYOUT-009",
+    "severity": "critical",
+    "category": "layout",
+    "detection": { "type": "structural", "config": { "check": "variable-dependency" } },
+    "risk_weight": 25,
+    "thai": {
+      "title": "Variable อ้างอิงวนรอบ (Circular Dependency)",
+      "cause": "Variable อ้างอิงถึงกันเป็นวงกลม เช่น A -> B -> C -> A",
+      "impact": "ทำให้เกิด infinite loop ขณะ compile หรือ evaluate expression",
+      "fix": "แก้ไข expression ของ variable ให้ไม่เกิดการอ้างอิงวนรอบ"
+    }
+  },
+  {
+    "rule_id": "LAYOUT-010",
+    "severity": "high",
+    "category": "layout",
+    "detection": { "type": "element_count", "config": { "check": "group-nesting", "max_depth": 5 } },
+    "risk_weight": 10,
+    "thai": {
+      "title": "กลุ่ม (Group) ซ้อนกันมากเกินไป",
+      "cause": "รายงานมีกลุ่มซ้อนกันเกิน 5 ชั้น",
+      "impact": "แต่ละชั้นของกลุ่มเพิ่มการใช้หน่วยความจำเป็นทวีคูณ",
+      "fix": "ลดจำนวนชั้นของกลุ่ม หรือรวมกลุ่มที่ไม่จำเป็นเข้าด้วยกัน"
+    }
+  },
+  {
+    "rule_id": "LAYOUT-011",
+    "severity": "medium",
+    "category": "layout",
+    "detection": { "type": "attribute_check", "config": { "check": "stretch-overflow-missing" } },
+    "risk_weight": 4,
+    "thai": {
+      "title": "textField ไม่มี isStretchWithOverflow",
+      "cause": "textField ที่มีข้อความยาวไม่ได้ตั้ง isStretchWithOverflow=true",
+      "impact": "ข้อความจะถูกตัดทอน ไม่แสดงผลครบถ้วน",
+      "fix": "เพิ่ม isStretchWithOverflow=true ให้กับ textField ที่มีข้อความยาว"
+    },
+    "autofix": { "available": true, "strategy": "stretch-overflow", "safe": true }
+  },
+  {
+    "rule_id": "LAYOUT-012",
+    "severity": "medium",
+    "category": "layout",
+    "detection": { "type": "expression_pattern", "config": { "check": "string-concatenation-chain" } },
+    "risk_weight": 3,
+    "thai": {
+      "title": "String concatenation มากเกินไปใน expression",
+      "cause": "Expression ใช้ + ต่อ String เกิน 10 ครั้ง",
+      "impact": "สร้าง String object ชั่วคราวจำนวนมาก เพิ่มภาระ GC",
+      "fix": "ใช้ StringBuilder หรือ String.format() แทนการต่อ String ด้วย +"
+    }
+  },
+  {
+    "rule_id": "LAYOUT-013",
+    "severity": "low",
+    "category": "layout",
+    "detection": { "type": "attribute_check", "config": { "check": "empty-band" } },
+    "risk_weight": 1,
+    "thai": {
+      "title": "Band ว่างเปล่า",
+      "cause": "มี Band ที่ไม่มี element แต่มีความสูงมากกว่า 0",
+      "impact": "สิ้นเปลืองพื้นที่หน้ากระดาษ อาจทำให้รายงานยาวเกินจำเป็น",
+      "fix": "ลบ Band ที่ไม่ใช้ หรือตั้งความสูงเป็น 0"
+    }
+  },
+  {
+    "rule_id": "LAYOUT-014",
+    "severity": "medium",
+    "category": "layout",
+    "detection": { "type": "attribute_check", "config": { "check": "element-outside-band" } },
+    "risk_weight": 5,
+    "thai": {
+      "title": "Element อยู่นอกขอบเขต Band",
+      "cause": "ตำแหน่ง y + height ของ element เกินความสูงของ Band",
+      "impact": "Element อาจไม่แสดงผลหรือถูกตัดออก",
+      "fix": "ปรับตำแหน่ง element ให้อยู่ภายในขอบเขตของ Band"
+    },
+    "autofix": { "available": true, "strategy": "element-position", "safe": true }
+  },
+  {
+    "rule_id": "LAYOUT-015",
+    "severity": "low",
+    "category": "layout",
+    "detection": { "type": "attribute_check", "config": { "check": "zero-size-element" } },
+    "risk_weight": 1,
+    "thai": {
+      "title": "Element มีขนาด 0",
+      "cause": "Element มี width หรือ height เป็น 0",
+      "impact": "Element จะมองไม่เห็น อาจเป็นข้อผิดพลาดในการออกแบบ",
+      "fix": "ตั้งค่า width และ height ให้มากกว่า 0 หรือลบ element ออก"
+    }
+  },
+  {
+    "rule_id": "LAYOUT-016",
+    "severity": "medium",
+    "category": "layout",
+    "detection": { "type": "attribute_check", "config": { "check": "element-exceeds-page-width" } },
+    "risk_weight": 4,
+    "thai": {
+      "title": "Element กว้างเกินหน้ากระดาษ",
+      "cause": "ตำแหน่ง x + width ของ element เกินความกว้างของ columnWidth",
+      "impact": "ข้อมูลจะถูกตัดหรือไม่แสดงผลบนหน้ากระดาษ",
+      "fix": "ปรับตำแหน่งหรือความกว้างของ element ให้พอดีกับหน้ากระดาษ"
+    }
+  },
+  {
+    "rule_id": "LAYOUT-017",
+    "severity": "high",
+    "category": "layout",
+    "detection": { "type": "expression_pattern", "config": { "check": "null-pointer-risk" } },
+    "risk_weight": 8,
+    "thai": {
+      "title": "เสี่ยง NullPointerException ใน expression",
+      "cause": "Expression เรียก method บน field โดยไม่ตรวจสอบ null",
+      "impact": "ถ้า field เป็น null จะเกิด NullPointerException ขณะ render",
+      "fix": "เพิ่มการตรวจสอบ null ก่อนเรียก method"
+    }
+  },
+  {
+    "rule_id": "LAYOUT-018",
+    "severity": "medium",
+    "category": "layout",
+    "detection": { "type": "structural", "config": { "check": "missing-detail-band" } },
+    "risk_weight": 3,
+    "thai": {
+      "title": "ไม่มี Detail Band",
+      "cause": "รายงานไม่มี detail band สำหรับแสดงข้อมูลแต่ละแถว",
+      "impact": "รายงานอาจแสดงเฉพาะ header/footer โดยไม่มีข้อมูลรายละเอียด",
+      "fix": "เพิ่ม detail band พร้อม element สำหรับแสดงข้อมูล"
+    }
+  },
+  {
+    "rule_id": "LAYOUT-019",
+    "severity": "high",
+    "category": "layout",
+    "detection": { "type": "structural", "config": { "check": "total-band-height-exceeds-page" } },
+    "risk_weight": 12,
+    "thai": {
+      "title": "ผลรวมความสูงของ Band ทั้งหมดเกินหน้ากระดาษ",
+      "cause": "ผลรวม height ของ band ต่างๆ เกิน usable page height",
+      "impact": "หน้าแรกจะแสดงผลผิดพลาด element อาจซ้อนทับกัน",
+      "fix": "ลดความสูงของ Band แต่ละส่วนให้รวมกันไม่เกินพื้นที่ใช้งานของหน้า"
+    }
+  },
+  {
+    "rule_id": "LAYOUT-020",
+    "severity": "low",
+    "category": "layout",
+    "detection": { "type": "attribute_check", "config": { "check": "duplicate-field-name" } },
+    "risk_weight": 2,
+    "thai": {
+      "title": "ชื่อ Field ซ้ำกัน",
+      "cause": "มี field ชื่อเดียวกันหลายตัวในรายงาน",
+      "impact": "อาจทำให้ข้อมูลแสดงผลผิดพลาด",
+      "fix": "ลบ field ที่ซ้ำกันออก ให้เหลือเพียง field เดียวต่อชื่อ"
+    }
+  },
+  {
+    "rule_id": "LAYOUT-021",
+    "severity": "medium",
+    "category": "layout",
+    "detection": { "type": "attribute_check", "config": { "check": "font-not-available" } },
+    "risk_weight": 4,
+    "thai": {
+      "title": "อาจใช้ฟอนต์ที่ไม่มีในระบบ",
+      "cause": "element อ้างอิงชื่อฟอนต์ที่อาจไม่มีในเครื่อง server",
+      "impact": "ฟอนต์จะถูกแทนที่ด้วย default ทำให้ layout เปลี่ยน",
+      "fix": "ใช้ฟอนต์มาตรฐาน หรือฝังฟอนต์ใน classpath"
+    }
+  },
+  {
+    "rule_id": "LAYOUT-022",
+    "severity": "high",
+    "category": "layout",
+    "detection": { "type": "expression_pattern", "config": { "check": "sql-in-expression" } },
+    "risk_weight": 10,
+    "thai": {
+      "title": "ตรวจพบ SQL ใน expression",
+      "cause": "Expression มีรูปแบบคล้าย SQL (SELECT, INSERT, UPDATE, DELETE)",
+      "impact": "อาจเป็นความพยายามใช้ database ซึ่งไม่รองรับในระบบนี้",
+      "fix": "ลบ SQL ออกจาก expression — ระบบนี้ไม่รองรับการเชื่อมต่อฐานข้อมูล"
+    }
+  },
+  {
+    "rule_id": "LAYOUT-023",
+    "severity": "medium",
+    "category": "layout",
+    "detection": { "type": "structural", "config": { "check": "split-type-prevent" } },
+    "risk_weight": 4,
+    "thai": {
+      "title": "Band มี splitType Prevent กับความสูงมาก",
+      "cause": "Band ตั้ง splitType Prevent แต่มีความสูงมาก",
+      "impact": "อาจเหลือพื้นที่ว่างมากในหน้าก่อนหน้า ทำให้รายงานยาวเกินจำเป็น",
+      "fix": "เปลี่ยน splitType เป็น Stretch หรือลดความสูงของ Band"
+    }
+  },
+  {
+    "rule_id": "LAYOUT-024",
+    "severity": "low",
+    "category": "layout",
+    "detection": { "type": "attribute_check", "config": { "check": "unused-variable" } },
+    "risk_weight": 1,
+    "thai": {
+      "title": "Variable ที่ไม่ได้ใช้งาน",
+      "cause": "มี variable ที่ไม่ถูกอ้างอิงใน expression ใดๆ",
+      "impact": "สิ้นเปลืองหน่วยความจำเล็กน้อย อาจทำให้โค้ดสับสน",
+      "fix": "ลบ variable ที่ไม่จำเป็นออก"
+    }
+  },
+  {
+    "rule_id": "LAYOUT-025",
+    "severity": "medium",
+    "category": "layout",
+    "detection": { "type": "structural", "config": { "check": "crosstab-in-detail" } },
+    "risk_weight": 6,
+    "thai": {
+      "title": "Crosstab อยู่ใน Detail Band",
+      "cause": "Crosstab ถูกวางใน detail band ซึ่งจะถูก render ทุกแถว",
+      "impact": "Crosstab ใช้หน่วยความจำมาก การ render ทุกแถวจะทำให้เกิด Heap exhaustion",
+      "fix": "ย้าย Crosstab ไปอยู่ใน Summary หรือ Group Footer band"
+    }
+  },
+  {
+    "rule_id": "LAYOUT-026",
+    "severity": "high",
+    "category": "layout",
+    "detection": { "type": "expression_pattern", "config": { "check": "class-forname-usage" } },
+    "risk_weight": 10,
+    "thai": {
+      "title": "ตรวจพบ Class.forName() ใน expression",
+      "cause": "Expression ใช้ Class.forName() ซึ่งอาจโหลด class ที่ไม่คาดคิด",
+      "impact": "อาจเป็นปัญหาด้านความปลอดภัย หรือโหลด class ที่ไม่มีใน classpath",
+      "fix": "หลีกเลี่ยงการใช้ Class.forName() ใน expression — ใช้ static type แทน"
+    }
+  }
+]

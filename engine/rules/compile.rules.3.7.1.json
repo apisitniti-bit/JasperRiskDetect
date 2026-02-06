@@ -1,4 +1,327 @@
-{
-  "_comment": "Phase 2: Compile analysis rules for iReport 3.7.1 — 25+ rules to be populated",
-  "rules": []
-}
+[
+  {
+    "rule_id": "COMPILE-001",
+    "severity": "critical",
+    "category": "compile",
+    "detection": { "type": "structural", "config": { "error_type": "COMPILE_ERROR" } },
+    "risk_weight": 25,
+    "thai": {
+      "title": "Compile ไม่สำเร็จ — ข้อผิดพลาดทั่วไป",
+      "cause": "ไฟล์ JRXML มี expression หรือโครงสร้างที่ JasperReports 3.7.1 ไม่สามารถ compile ได้",
+      "impact": "รายงานจะใช้งานไม่ได้ — ไม่สามารถสร้างไฟล์ .jasper ได้",
+      "fix": "ตรวจสอบ expression ที่ผิดพลาดตามบรรทัดที่ระบุ"
+    }
+  },
+  {
+    "rule_id": "COMPILE-002",
+    "severity": "critical",
+    "category": "compile",
+    "detection": { "type": "expression_pattern", "config": { "error_type": "SYNTAX_ERROR" } },
+    "risk_weight": 20,
+    "thai": {
+      "title": "Syntax Error ใน Expression",
+      "cause": "Expression มีรูปแบบไวยากรณ์ผิดพลาด เช่น วงเล็บไม่ครบ หรือ operator ผิดที่",
+      "impact": "ไม่สามารถ compile รายงานได้",
+      "fix": "ตรวจสอบ expression ให้ถูกต้องตามไวยากรณ์ Java"
+    }
+  },
+  {
+    "rule_id": "COMPILE-003",
+    "severity": "high",
+    "category": "compile",
+    "detection": { "type": "expression_pattern", "config": { "error_type": "UNRESOLVED_FIELD" } },
+    "risk_weight": 14,
+    "thai": {
+      "title": "ไม่พบ Field ที่อ้างอิง",
+      "cause": "Expression อ้างอิง $F{fieldName} ที่ไม่ได้ประกาศใน <field> ของรายงาน",
+      "impact": "ไม่สามารถ compile รายงานได้",
+      "fix": "เพิ่ม <field> ที่ขาดหาย หรือแก้ไขชื่อ field ใน expression ให้ตรงกัน"
+    }
+  },
+  {
+    "rule_id": "COMPILE-004",
+    "severity": "high",
+    "category": "compile",
+    "detection": { "type": "expression_pattern", "config": { "error_type": "UNRESOLVED_VARIABLE" } },
+    "risk_weight": 14,
+    "thai": {
+      "title": "ไม่พบ Variable ที่อ้างอิง",
+      "cause": "Expression อ้างอิง $V{varName} ที่ไม่ได้ประกาศใน <variable> ของรายงาน",
+      "impact": "ไม่สามารถ compile รายงานได้",
+      "fix": "เพิ่ม <variable> ที่ขาดหาย หรือแก้ไขชื่อ variable ใน expression ให้ตรงกัน"
+    }
+  },
+  {
+    "rule_id": "COMPILE-005",
+    "severity": "high",
+    "category": "compile",
+    "detection": { "type": "expression_pattern", "config": { "error_type": "UNRESOLVED_SYMBOL" } },
+    "risk_weight": 12,
+    "thai": {
+      "title": "ไม่พบ Symbol ที่อ้างอิง",
+      "cause": "Expression ใช้ class หรือ method ที่ไม่มีใน classpath",
+      "impact": "ไม่สามารถ compile รายงานได้",
+      "fix": "ตรวจสอบว่า class ที่ใช้มีอยู่ใน classpath ของ JasperReports 3.7.1"
+    }
+  },
+  {
+    "rule_id": "COMPILE-006",
+    "severity": "critical",
+    "category": "compile",
+    "detection": { "type": "structural", "config": { "error_type": "VERSION_REJECTED" } },
+    "risk_weight": 25,
+    "thai": {
+      "title": "เวอร์ชัน JRXML ไม่รองรับ",
+      "cause": "ไฟล์ JRXML ถูกสร้างด้วย JasperReports เวอร์ชันสูงกว่า 3.7.1",
+      "impact": "ไม่สามารถ compile ด้วย JasperReports 3.7.1 ได้",
+      "fix": "เปิดไฟล์ด้วย iReport 3.7.1 แล้ว save ใหม่"
+    }
+  },
+  {
+    "rule_id": "COMPILE-007",
+    "severity": "critical",
+    "category": "compile",
+    "detection": { "type": "structural", "config": { "error_type": "SECURITY_VIOLATION" } },
+    "risk_weight": 25,
+    "thai": {
+      "title": "ละเมิดนโยบายความปลอดภัย",
+      "cause": "รายงานพยายามเข้าถึงทรัพยากรที่ถูกจำกัด เช่น เครือข่าย หรือไฟล์นอก temp",
+      "impact": "ถูกปฏิเสธโดยระบบความปลอดภัย — ไม่สามารถ compile ได้",
+      "fix": "ลบ expression ที่พยายามเข้าถึงเครือข่ายหรือไฟล์ระบบ"
+    }
+  },
+  {
+    "rule_id": "COMPILE-008",
+    "severity": "high",
+    "category": "compile",
+    "detection": { "type": "expression_pattern", "config": { "check": "type-mismatch" } },
+    "risk_weight": 12,
+    "thai": {
+      "title": "ประเภทข้อมูลไม่ตรงกัน (Type Mismatch)",
+      "cause": "Expression คืนค่าประเภทไม่ตรงกับที่ element คาดหวัง",
+      "impact": "ไม่สามารถ compile หรือ render ข้อมูลผิดพลาด",
+      "fix": "ตรวจสอบประเภทข้อมูลของ expression ให้ตรงกับ element"
+    }
+  },
+  {
+    "rule_id": "COMPILE-009",
+    "severity": "high",
+    "category": "compile",
+    "detection": { "type": "expression_pattern", "config": { "check": "missing-import" } },
+    "risk_weight": 10,
+    "thai": {
+      "title": "ขาด import สำหรับ class ที่ใช้ใน expression",
+      "cause": "Expression ใช้ class ที่ต้อง import แต่ไม่ได้ระบุ <import> ในรายงาน",
+      "impact": "ไม่สามารถ compile รายงานได้",
+      "fix": "เพิ่ม <import value=\"...\" /> ที่จำเป็นในส่วน <jasperReport>"
+    }
+  },
+  {
+    "rule_id": "COMPILE-010",
+    "severity": "medium",
+    "category": "compile",
+    "detection": { "type": "expression_pattern", "config": { "check": "deprecated-api" } },
+    "risk_weight": 5,
+    "thai": {
+      "title": "ใช้ API ที่เลิกใช้แล้ว",
+      "cause": "Expression ใช้ method หรือ class ที่ deprecated ใน JasperReports 3.7.1",
+      "impact": "รายงาน compile ได้แต่อาจมีปัญหาในอนาคต",
+      "fix": "เปลี่ยนไปใช้ API ที่แนะนำแทน"
+    }
+  },
+  {
+    "rule_id": "COMPILE-011",
+    "severity": "high",
+    "category": "compile",
+    "detection": { "type": "expression_pattern", "config": { "check": "invalid-cast" } },
+    "risk_weight": 10,
+    "thai": {
+      "title": "การ cast ประเภทข้อมูลไม่ถูกต้อง",
+      "cause": "Expression มีการ cast ที่อาจล้มเหลว เช่น (String) กับตัวเลข",
+      "impact": "เกิด ClassCastException ขณะ render รายงาน",
+      "fix": "ใช้ .toString() แทน cast หรือตรวจสอบประเภทก่อน cast"
+    }
+  },
+  {
+    "rule_id": "COMPILE-012",
+    "severity": "medium",
+    "category": "compile",
+    "detection": { "type": "expression_pattern", "config": { "check": "empty-expression" } },
+    "risk_weight": 4,
+    "thai": {
+      "title": "Expression ว่างเปล่า",
+      "cause": "textField หรือ element มี expression ที่ว่างเปล่า",
+      "impact": "จะแสดงค่า null หรือว่างเปล่า อาจเป็นข้อผิดพลาด",
+      "fix": "ใส่ expression ที่ถูกต้อง หรือลบ element ที่ไม่จำเป็นออก"
+    }
+  },
+  {
+    "rule_id": "COMPILE-013",
+    "severity": "medium",
+    "category": "compile",
+    "detection": { "type": "expression_pattern", "config": { "check": "hardcoded-value" } },
+    "risk_weight": 3,
+    "thai": {
+      "title": "ค่าคงที่ใน textField expression",
+      "cause": "textField ใช้ expression ที่เป็นค่าคงที่ เช่น \"Hello\" แทน $F{...}",
+      "impact": "ไม่ใช่ข้อผิดพลาด แต่ควรใช้ staticText แทน",
+      "fix": "เปลี่ยนเป็น staticText หรือใช้ field/variable แทนค่าคงที่"
+    }
+  },
+  {
+    "rule_id": "COMPILE-014",
+    "severity": "high",
+    "category": "compile",
+    "detection": { "type": "expression_pattern", "config": { "check": "java8-syntax" } },
+    "risk_weight": 14,
+    "thai": {
+      "title": "ตรวจพบ syntax Java 8+ ใน expression",
+      "cause": "Expression ใช้ lambda, stream, หรือ method reference ที่ไม่รองรับใน Java 6/7",
+      "impact": "ไม่สามารถ compile ด้วย JasperReports 3.7.1 ที่ทำงานบน Java 6/7",
+      "fix": "เปลี่ยนเป็น syntax Java 6 เช่น ใช้ for loop แทน stream"
+    }
+  },
+  {
+    "rule_id": "COMPILE-015",
+    "severity": "medium",
+    "category": "compile",
+    "detection": { "type": "expression_pattern", "config": { "check": "division-by-zero-risk" } },
+    "risk_weight": 6,
+    "thai": {
+      "title": "เสี่ยงหารด้วยศูนย์",
+      "cause": "Expression มีการหารที่ตัวหารอาจเป็น 0 หรือ null",
+      "impact": "เกิด ArithmeticException ขณะ render รายงาน",
+      "fix": "เพิ่มการตรวจสอบค่าก่อนหาร เช่น ($F{x} != 0 ? a/$F{x} : 0)"
+    }
+  },
+  {
+    "rule_id": "COMPILE-016",
+    "severity": "medium",
+    "category": "compile",
+    "detection": { "type": "expression_pattern", "config": { "check": "unmatched-parentheses" } },
+    "risk_weight": 5,
+    "thai": {
+      "title": "วงเล็บไม่ครบ",
+      "cause": "Expression มีวงเล็บเปิด/ปิดไม่เท่ากัน",
+      "impact": "ไม่สามารถ compile รายงานได้",
+      "fix": "ตรวจสอบวงเล็บใน expression ให้ครบถ้วน"
+    }
+  },
+  {
+    "rule_id": "COMPILE-017",
+    "severity": "high",
+    "category": "compile",
+    "detection": { "type": "expression_pattern", "config": { "check": "parameter-not-found" } },
+    "risk_weight": 12,
+    "thai": {
+      "title": "ไม่พบ Parameter ที่อ้างอิง",
+      "cause": "Expression อ้างอิง $P{paramName} ที่ไม่ได้ประกาศ",
+      "impact": "ไม่สามารถ compile รายงานได้",
+      "fix": "เพิ่ม <parameter> ที่ขาดหาย หรือแก้ไขชื่อ parameter ให้ตรง"
+    }
+  },
+  {
+    "rule_id": "COMPILE-018",
+    "severity": "medium",
+    "category": "compile",
+    "detection": { "type": "expression_pattern", "config": { "check": "resource-bundle-missing" } },
+    "risk_weight": 5,
+    "thai": {
+      "title": "อ้างอิง Resource Bundle ที่อาจไม่มี",
+      "cause": "Expression ใช้ $R{...} แต่รายงานไม่ได้ระบุ resourceBundle",
+      "impact": "จะแสดง key แทนข้อความที่แปล หรือ compile ล้มเหลว",
+      "fix": "เพิ่ม resourceBundle attribute ในรายงาน หรือลบ $R{} ออก"
+    }
+  },
+  {
+    "rule_id": "COMPILE-019",
+    "severity": "high",
+    "category": "compile",
+    "detection": { "type": "structural", "config": { "check": "subreport-compile-error" } },
+    "risk_weight": 10,
+    "thai": {
+      "title": "Subreport อ้างอิงไฟล์ที่อาจไม่มี",
+      "cause": "subreportExpression อ้างอิงไฟล์ .jasper ที่อาจไม่มีอยู่",
+      "impact": "เกิด error เมื่อ render ถึง subreport",
+      "fix": "ตรวจสอบว่าไฟล์ subreport อยู่ในตำแหน่งที่ถูกต้อง"
+    }
+  },
+  {
+    "rule_id": "COMPILE-020",
+    "severity": "medium",
+    "category": "compile",
+    "detection": { "type": "expression_pattern", "config": { "check": "date-format-invalid" } },
+    "risk_weight": 5,
+    "thai": {
+      "title": "รูปแบบวันที่ไม่ถูกต้อง",
+      "cause": "Expression ใช้ SimpleDateFormat กับ pattern ที่ไม่ถูกต้อง",
+      "impact": "เกิด IllegalArgumentException ขณะ render",
+      "fix": "ตรวจสอบ pattern ของ SimpleDateFormat ให้ถูกต้อง"
+    }
+  },
+  {
+    "rule_id": "COMPILE-021",
+    "severity": "low",
+    "category": "compile",
+    "detection": { "type": "expression_pattern", "config": { "check": "unnecessary-cast" } },
+    "risk_weight": 1,
+    "thai": {
+      "title": "การ cast ที่ไม่จำเป็น",
+      "cause": "Expression มีการ cast ไปเป็นประเภทเดียวกัน เช่น (String) stringVar",
+      "impact": "ไม่มีผลกระทบ แต่ทำให้โค้ดอ่านยาก",
+      "fix": "ลบ cast ที่ไม่จำเป็นออก"
+    }
+  },
+  {
+    "rule_id": "COMPILE-022",
+    "severity": "high",
+    "category": "compile",
+    "detection": { "type": "expression_pattern", "config": { "check": "infinite-loop-risk" } },
+    "risk_weight": 14,
+    "thai": {
+      "title": "เสี่ยง Infinite Loop ใน expression",
+      "cause": "Expression มี while หรือ for loop ที่อาจไม่สิ้นสุด",
+      "impact": "ทำให้ compile หรือ render หยุดทำงาน (hang)",
+      "fix": "ลบ loop ออกจาก expression หรือใส่เงื่อนไขสิ้นสุดที่ชัดเจน"
+    }
+  },
+  {
+    "rule_id": "COMPILE-023",
+    "severity": "medium",
+    "category": "compile",
+    "detection": { "type": "expression_pattern", "config": { "check": "numeric-overflow" } },
+    "risk_weight": 5,
+    "thai": {
+      "title": "เสี่ยง Numeric Overflow",
+      "cause": "Expression คำนวณตัวเลขที่อาจเกินขนาด int หรือ long",
+      "impact": "ผลลัพธ์จะผิดพลาดเนื่องจาก overflow",
+      "fix": "ใช้ BigDecimal แทน int/long สำหรับการคำนวณที่อาจมีค่าสูง"
+    }
+  },
+  {
+    "rule_id": "COMPILE-024",
+    "severity": "low",
+    "category": "compile",
+    "detection": { "type": "expression_pattern", "config": { "check": "redundant-null-check" } },
+    "risk_weight": 1,
+    "thai": {
+      "title": "ตรวจสอบ null ซ้ำซ้อน",
+      "cause": "Expression ตรวจสอบ null หลายครั้งสำหรับตัวแปรเดียวกัน",
+      "impact": "ไม่มีผลกระทบ แต่ทำให้ expression ยาวเกินจำเป็น",
+      "fix": "ลดการตรวจสอบ null ที่ซ้ำซ้อน"
+    }
+  },
+  {
+    "rule_id": "COMPILE-025",
+    "severity": "medium",
+    "category": "compile",
+    "detection": { "type": "structural", "config": { "check": "missing-return-type" } },
+    "risk_weight": 6,
+    "thai": {
+      "title": "Expression ไม่คืนค่าที่ถูกต้อง",
+      "cause": "Expression อาจไม่คืนค่าในทุกเส้นทาง (conditional branch)",
+      "impact": "อาจเกิด null หรือค่าไม่คาดคิดขณะ render",
+      "fix": "ตรวจสอบให้ expression คืนค่าในทุกกรณี"
+    }
+  }
+]

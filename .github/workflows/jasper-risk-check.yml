@@ -1,0 +1,83 @@
+name: Jasper Risk Check
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - '**/*.jrxml'
+      - 'engine/**'
+      - 'cli/**'
+  pull_request:
+    branches: [main]
+    paths:
+      - '**/*.jrxml'
+      - 'engine/**'
+      - 'cli/**'
+  workflow_dispatch:
+    inputs:
+      threshold:
+        description: 'Risk score threshold (0-100)'
+        required: false
+        default: '80'
+      directory:
+        description: 'Directory to scan'
+        required: false
+        default: './reports'
+
+jobs:
+  risk-analysis:
+    name: JRXML Risk Analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build engine
+        run: npm run build --workspace=@jasper-risk-detect/engine
+
+      - name: Jasper Risk Check
+        id: risk-check
+        run: |
+          THRESHOLD=${{ inputs.threshold || '80' }}
+          DIRECTORY=${{ inputs.directory || './reports' }}
+          npx tsx cli/bin/jasper-risk-detect.ts analyze-dir "$DIRECTORY" \
+            --recursive \
+            --format=json \
+            --threshold="$THRESHOLD" \
+            --output=risk-report.json
+        continue-on-error: true
+
+      - name: Display Thai Summary
+        if: always()
+        run: |
+          THRESHOLD=${{ inputs.threshold || '80' }}
+          DIRECTORY=${{ inputs.directory || './reports' }}
+          npx tsx cli/bin/jasper-risk-detect.ts analyze-dir "$DIRECTORY" \
+            --recursive \
+            --format=thai \
+            --threshold="$THRESHOLD" || true
+
+      - name: Upload Risk Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jasper-risk-report
+          path: risk-report.json
+          retention-days: 30
+
+      - name: Check Result
+        if: steps.risk-check.outcome == 'failure'
+        run: |
+          echo "::error::JRXML risk score exceeds threshold. See risk-report.json artifact for details."
+          exit 1
