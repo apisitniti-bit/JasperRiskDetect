@@ -27,9 +27,9 @@ function layoutToFinding(lf: LayoutFinding): Finding {
     message: lf.message,
     thai: {
       title: lf.thai_message,
-      cause: lf.message,
-      impact: "",
-      fix: "",
+      cause: lf.thai_message,
+      impact: "กรุณาตรวจสอบรายละเอียดจาก element ที่ระบุ",
+      fix: "กรุณาตรวจสอบและแก้ไขตาม element ที่ระบุใน Band",
     },
     risk_weight: 0,
     details: lf.details,

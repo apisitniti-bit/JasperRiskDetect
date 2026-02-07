@@ -1,9 +1,11 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { Panel, Group, Separator } from "react-resizable-panels";
 import TopBar from "./TopBar";
 import ErrorListPanel from "./ErrorListPanel";
 import JrxmlViewerPanel from "./JrxmlViewerPanel";
+import DesignerPreviewPanel from "./DesignerPreviewPanel";
 import RiskScorePanel from "./RiskScorePanel";
 import ThaiExplainPanel from "./ThaiExplainPanel";
 import FileUploadModal from "./FileUploadModal";
@@ -105,46 +107,75 @@ export default function IDEShell() {
         isAnalyzing={isLoading}
       />
 
-      {/* Main IDE Layout: Left | Center | Right */}
-      <div className="flex flex-1 overflow-hidden">
+      {/* Main IDE Layout — fully resizable */}
+      <Group orientation="horizontal" className="flex-1 overflow-hidden">
         {/* Left Panel: Error List */}
-        <div className="flex w-72 shrink-0 flex-col border-r border-ide-border">
-          <ErrorListPanel
-            findings={findings}
-            selectedFinding={selectedFinding}
-            onSelectFinding={handleSelectFinding}
-          />
-        </div>
-
-        {/* Center: JRXML Viewer (top) + Thai Explain (bottom) */}
-        <div className="flex flex-1 flex-col overflow-hidden">
-          {/* JRXML Viewer */}
-          <div className="flex-1 overflow-hidden border-b border-ide-border">
-            <JrxmlViewerPanel
-              content={jrxmlContent}
+        <Panel id="error-list" defaultSize="18%" minSize="12%" maxSize="35%">
+          <div className="flex h-full flex-col border-r border-ide-border">
+            <ErrorListPanel
               findings={findings}
               selectedFinding={selectedFinding}
+              onSelectFinding={handleSelectFinding}
             />
           </div>
+        </Panel>
 
-          {/* Bottom Panel: Thai Explain */}
-          <div className="h-52 shrink-0 overflow-hidden">
-            <ThaiExplainPanel finding={selectedFinding} jrxmlContent={jrxmlContent} />
-          </div>
-        </div>
+        <Separator />
+
+        {/* Center: Designer (top) + Thai Explain (bottom) */}
+        <Panel id="center" minSize="30%">
+          <Group orientation="vertical">
+            {/* Designer Preview — main view */}
+            <Panel id="designer" defaultSize="55%" minSize="20%">
+              <div className="flex h-full flex-col overflow-hidden">
+                <DesignerPreviewPanel
+                  jrxmlContent={jrxmlContent}
+                  findings={findings}
+                  selectedFinding={selectedFinding}
+                />
+              </div>
+            </Panel>
+
+            <Separator />
+
+            {/* Thai Explain */}
+            <Panel id="thai-explain" defaultSize="30%" minSize="10%">
+              <div className="flex h-full flex-col overflow-hidden">
+                <ThaiExplainPanel finding={selectedFinding} jrxmlContent={jrxmlContent} />
+              </div>
+            </Panel>
+
+            <Separator />
+
+            {/* JRXML Viewer — collapsed by default (small), expandable */}
+            <Panel id="jrxml-viewer" defaultSize="15%" minSize="3%" collapsible collapsedSize="3%">
+              <div className="flex h-full flex-col overflow-hidden">
+                <JrxmlViewerPanel
+                  content={jrxmlContent}
+                  findings={findings}
+                  selectedFinding={selectedFinding}
+                />
+              </div>
+            </Panel>
+          </Group>
+        </Panel>
+
+        <Separator />
 
         {/* Right Panel: Risk Score */}
-        <div className="w-56 shrink-0 border-l border-ide-border">
-          <RiskScorePanel
-            layoutScore={layoutScore}
-            compileScore={compileScore}
-            riskLevel={riskLevel}
-            parameters={parameters}
-            fields={fields}
-            variables={variables}
-          />
-        </div>
-      </div>
+        <Panel id="risk-score" defaultSize="22%" minSize="12%" maxSize="35%">
+          <div className="flex h-full flex-col border-l border-ide-border">
+            <RiskScorePanel
+              layoutScore={layoutScore}
+              compileScore={compileScore}
+              riskLevel={riskLevel}
+              parameters={parameters}
+              fields={fields}
+              variables={variables}
+            />
+          </div>
+        </Panel>
+      </Group>
 
       {/* Upload Modal */}
       <FileUploadModal

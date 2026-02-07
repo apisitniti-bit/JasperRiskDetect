@@ -353,6 +353,6 @@
       "impact": "JasperReports จะพยายามขยาย element ไม่หยุด เนื่องจากไม่มี page break mechanism — ทำให้ memory บวมจน java.lang.OutOfMemoryError: Java heap space ส่งผลให้ server ล่ม",
       "fix": "ลบ isPrintWhenDetailOverflows=\"true\" ออกจาก element ที่อยู่นอก Detail Band หรือย้าย element ไปอยู่ใน Detail Band แทน"
     },
-    "autofix": { "available": false, "strategy": null, "safe": false }
+    "autofix": { "available": false, "strategy": "manual", "safe": false }
   }
 ]

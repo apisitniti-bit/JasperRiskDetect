@@ -25,7 +25,12 @@ export function checkImageSize(ast: JrxmlAst): LayoutFinding[] {
           thai_message: `พบรูปภาพแบบ base64 ฝังในแถบ "${band.type}" ขนาดประมาณ ${sizeKB} KB (เกณฑ์: ${MAX_EMBEDDED_IMAGE_KB} KB) — จะใช้หน่วยความจำมากทุกหน้าที่พิมพ์`,
           band_type: band.type,
           element_name: getElementLabel(el),
-          details: { estimated_size_kb: sizeKB, threshold_kb: MAX_EMBEDDED_IMAGE_KB },
+          details: {
+            estimated_size_kb: sizeKB,
+            threshold_kb: MAX_EMBEDDED_IMAGE_KB,
+            element_type: el.type,
+            element_position: { x: el.x, y: el.y, width: el.width, height: el.height },
+          },
         });
       }
     }

@@ -16,11 +16,11 @@ export function checkExpressionComplexity(ast: JrxmlAst): LayoutFinding[] {
         severity: "medium",
         message: `Expression has ${ternaryDepth} levels of nested ternary (threshold: ${MAX_TERNARY_DEPTH})`,
         thai_message: `พบ expression ที่มี ternary ซ้อนกัน ${ternaryDepth} ชั้น (เกณฑ์: ${MAX_TERNARY_DEPTH}) — เสี่ยงทำให้ compile ช้าหรือ timeout`,
-        element_name: expr.substring(0, 80),
+        element_name: expr,
         details: {
           ternary_depth: ternaryDepth,
           threshold: MAX_TERNARY_DEPTH,
-          expression_preview: expr.substring(0, 120),
+          expression_preview: expr,
         },
       });
     }
@@ -33,11 +33,11 @@ export function checkExpressionComplexity(ast: JrxmlAst): LayoutFinding[] {
         severity: "low",
         message: `Expression has ${concatCount} string concatenations (threshold: ${MAX_CONCAT_CHAIN})`,
         thai_message: `พบ expression ที่มีการต่อ String ${concatCount} ครั้ง (เกณฑ์: ${MAX_CONCAT_CHAIN}) — ใช้ StringBuilder แทนเพื่อประสิทธิภาพ`,
-        element_name: expr.substring(0, 80),
+        element_name: expr,
         details: {
           concat_count: concatCount,
           threshold: MAX_CONCAT_CHAIN,
-          expression_preview: expr.substring(0, 120),
+          expression_preview: expr,
         },
       });
     }

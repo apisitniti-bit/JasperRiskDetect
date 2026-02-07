@@ -75,8 +75,8 @@ export default function ThaiExplainPanel({ finding, jrxmlContent }: ThaiExplainP
 
         {finding.element_name && (
           <div className="rounded bg-ide-bg px-3 py-2 text-sm">
-            <span className="text-ide-text-muted">Expression / Text: </span>
-            <code className="break-all font-mono text-sky-300">{finding.element_name}</code>
+            <div className="text-ide-text-muted mb-1">Expression / Text:</div>
+            <code className="block whitespace-pre-wrap break-all font-mono text-sky-300 text-xs leading-relaxed">{finding.element_name}</code>
           </div>
         )}
 
