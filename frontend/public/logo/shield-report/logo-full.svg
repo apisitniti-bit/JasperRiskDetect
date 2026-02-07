@@ -1,0 +1,18 @@
+<svg width="200" height="32" viewBox="0 0 200 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Shield with Report -->
+  <g transform="translate(0, 4)">
+    <!-- Shield Background -->
+    <path d="M12 2L4 6V14C4 20 12 26 12 26S20 20 20 14V6L12 2Z" fill="#00bcd4" stroke="#00bcd4" stroke-width="1"/>
+    <!-- Report Document -->
+    <rect x="7" y="8" width="10" height="12" fill="white" rx="0.5"/>
+    <!-- Folded Corner -->
+    <path d="M14 8L17 11H14V8Z" fill="#e0e0e0"/>
+    <!-- Report Lines -->
+    <rect x="9" y="12" width="6" height="0.5" fill="#00bcd4"/>
+    <rect x="9" y="14" width="4" height="0.5" fill="#00bcd4"/>
+    <rect x="9" y="16" width="5" height="0.5" fill="#00bcd4"/>
+  </g>
+  <!-- Text -->
+  <text x="28" y="20" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="600" fill="#d4d4d4">JasperRiskDetect</text>
+  <text x="28" y="28" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#808080">iReport 3.7.1</text>
+</svg>

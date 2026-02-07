@@ -1,0 +1,30 @@
+<svg width="128" height="152" viewBox="0 0 128 152" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Shield Shape -->
+  <path d="M64 4L8 28V68C8 104 64 144 64 144S120 104 120 68V28L64 4Z" fill="url(#shieldGradHero)" stroke="#5A8BBF" stroke-width="2.5"/>
+  <!-- Inner inset border -->
+  <path d="M64 12L16 32V68C16 99 64 135 64 135S112 99 112 68V32L64 12Z" fill="none" stroke="#3D5A80" stroke-width="1" opacity="0.6"/>
+  <!-- Subtle grid pattern inside shield -->
+  <defs>
+    <pattern id="gridPattern" width="8" height="8" patternUnits="userSpaceOnUse">
+      <path d="M 8 0 L 0 0 0 8" fill="none" stroke="#3D5A80" stroke-width="0.3" opacity="0.15"/>
+    </pattern>
+    <clipPath id="shieldClip">
+      <path d="M64 12L16 32V68C16 99 64 135 64 135S112 99 112 68V32L64 12Z"/>
+    </clipPath>
+    <linearGradient id="shieldGradHero" x1="64" y1="4" x2="64" y2="144" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2B3A4E"/>
+      <stop offset="1" stop-color="#1A2636"/>
+    </linearGradient>
+  </defs>
+  <rect x="16" y="12" width="96" height="123" fill="url(#gridPattern)" clip-path="url(#shieldClip)"/>
+  <!-- Magnifying glass visor bar -->
+  <rect x="28" y="36" width="72" height="16" rx="2" fill="#2B3A4E" stroke="#3D5A80" stroke-width="0.5" opacity="0.8"/>
+  <circle cx="40" cy="44" r="4" fill="none" stroke="#5A8BBF" stroke-width="1.2"/>
+  <line x1="43" y1="47" x2="47" y2="51" stroke="#5A8BBF" stroke-width="1.5" stroke-linecap="round" opacity="0.8"/>
+  <text x="62" y="46" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="8" font-weight="400" fill="#5A8BBF" dominant-baseline="central">Risk Detection</text>
+  <!-- JRD Monogram -->
+  <text x="64" y="74" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="32" font-weight="700" fill="#FFFFFF" text-anchor="middle" dominant-baseline="central" letter-spacing="-1">JRD</text>
+  <!-- Amber version badge -->
+  <rect x="32" y="92" width="64" height="20" rx="3" fill="#1A2636" stroke="#E0B830" stroke-width="1.2"/>
+  <text x="64" y="103" font-family="'JetBrains Mono','IBM Plex Mono',monospace" font-size="11" font-weight="500" fill="#C0B090" text-anchor="middle" dominant-baseline="central">iReport 3.7.1</text>
+</svg>

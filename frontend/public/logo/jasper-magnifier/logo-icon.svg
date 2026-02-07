@@ -1,0 +1,15 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Hexagon Shape -->
+  <path d="M16 4L24 9V19L16 24L8 19V9L16 4Z" fill="url(#crystalGradient)" stroke="#00bcd4" stroke-width="1"/>
+  <!-- Inner Facets -->
+  <path d="M16 4L16 24M8 9L24 9M8 19L24 19M10 11.5L22 11.5M10 16.5L22 16.5" stroke="#00a8b8" stroke-width="0.5" opacity="0.5"/>
+  <!-- Version 3.7.1 in facets -->
+  <text x="16" y="15" font-family="monospace" font-size="5" fill="#004d5c" text-anchor="middle" opacity="0.7">3.7.1</text>
+  <!-- Gradient Definition -->
+  <defs>
+    <linearGradient id="crystalGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00bcd4;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#008ba3;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+</svg>

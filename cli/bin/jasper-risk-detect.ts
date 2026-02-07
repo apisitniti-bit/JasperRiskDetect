@@ -4,6 +4,7 @@ import type { CliOptions } from "../src/types";
 import { EXIT_ERROR } from "../src/types";
 import { analyzeCommand } from "../src/commands/analyze";
 import { batchCommand } from "../src/commands/batch";
+import { printLogo } from "../src/logo";
 
 const HELP = `
 JasperRiskDetect CLI — วิเคราะห์ความเสี่ยง JasperReports สำหรับ iReport 3.7.1
@@ -92,7 +93,8 @@ async function main(): Promise<void> {
   const args = process.argv.slice(2);
 
   if (args.length === 0) {
-    process.stdout.write(HELP + "\n");
+    printLogo(false);
+    process.stdout.write("\n" + HELP + "\n");
     process.exit(0);
   }
 

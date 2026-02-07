@@ -1,0 +1,14 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Shield Shape -->
+  <path d="M8 1L2 3.5V8C2 11.5 8 15 8 15S14 11.5 14 8V3.5L8 1Z" fill="url(#shieldGrad16)" stroke="#5A8BBF" stroke-width="1"/>
+  <!-- Checkmark -->
+  <path d="M5.5 8L7.2 10L10.5 6" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- Amber version line -->
+  <line x1="4" y1="11.5" x2="12" y2="11.5" stroke="#E0B830" stroke-width="0.75" opacity="0.8"/>
+  <defs>
+    <linearGradient id="shieldGrad16" x1="8" y1="1" x2="8" y2="15" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2B3A4E"/>
+      <stop offset="1" stop-color="#1A2636"/>
+    </linearGradient>
+  </defs>
+</svg>

@@ -1,0 +1,12 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Shield Background -->
+  <path d="M16 4L8 8V16C8 22 16 28 16 28S24 22 24 16V8L16 4Z" fill="none" stroke="#d4d4d4" stroke-width="2"/>
+  <!-- Report Document -->
+  <rect x="11" y="12" width="10" height="12" fill="none" stroke="#d4d4d4" stroke-width="1" rx="0.5"/>
+  <!-- Folded Corner -->
+  <path d="M18 12L21 15H18" fill="none" stroke="#d4d4d4" stroke-width="1"/>
+  <!-- Report Lines -->
+  <line x1="13" y1="16" x2="19" y2="16" stroke="#d4d4d4" stroke-width="1"/>
+  <line x1="13" y1="18" x2="17" y2="18" stroke="#d4d4d4" stroke-width="1"/>
+  <line x1="13" y1="20" x2="18" y2="20" stroke="#d4d4d4" stroke-width="1"/>
+</svg>

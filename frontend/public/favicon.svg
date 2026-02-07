@@ -1,0 +1,13 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M16 2L4 7V16C4 23 16 30 16 30S28 23 28 16V7L16 2Z" fill="url(#sg)" stroke="#5A8BBF" stroke-width="1.5"/>
+  <path d="M16 4.5L6 8.5V16C6 21.8 16 27.5 16 27.5S26 21.8 26 16V8.5L16 4.5Z" fill="none" stroke="#3D5A80" stroke-width="0.5" opacity="0.6"/>
+  <text x="16" y="15" font-family="system-ui,sans-serif" font-size="8" font-weight="700" fill="#FFF" text-anchor="middle" dominant-baseline="central" letter-spacing="-0.5">JRD</text>
+  <rect x="8" y="19" width="16" height="6" rx="1" fill="none" stroke="#E0B830" stroke-width="0.75"/>
+  <text x="16" y="22.5" font-family="monospace" font-size="4.5" font-weight="500" fill="#C0B090" text-anchor="middle" dominant-baseline="central">iR 3.7.1</text>
+  <defs>
+    <linearGradient id="sg" x1="16" y1="2" x2="16" y2="30" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2B3A4E"/>
+      <stop offset="1" stop-color="#1A2636"/>
+    </linearGradient>
+  </defs>
+</svg>

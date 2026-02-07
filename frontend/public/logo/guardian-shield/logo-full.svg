@@ -1,0 +1,23 @@
+<svg width="240" height="36" viewBox="0 0 240 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Shield Icon -->
+  <g transform="translate(2, 2)">
+    <!-- Shield Shape -->
+    <path d="M14 1L3 5.5V13C3 19 14 25 14 25S25 19 25 13V5.5L14 1Z" fill="url(#shieldGradFull)" stroke="#5A8BBF" stroke-width="1.5"/>
+    <!-- Inner inset border -->
+    <path d="M14 3L5 6.8V13C5 18 14 23 14 23S23 18 23 13V6.8L14 3Z" fill="none" stroke="#3D5A80" stroke-width="0.5" opacity="0.6"/>
+    <!-- JRD Monogram -->
+    <text x="14" y="12" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="7" font-weight="700" fill="#FFFFFF" text-anchor="middle" dominant-baseline="central" letter-spacing="-0.3">JRD</text>
+    <!-- Amber version badge -->
+    <rect x="6.5" y="15.5" width="15" height="5" rx="0.8" fill="none" stroke="#E0B830" stroke-width="0.6"/>
+    <text x="14" y="18.5" font-family="'JetBrains Mono','IBM Plex Mono',monospace" font-size="3.8" font-weight="500" fill="#C0B090" text-anchor="middle" dominant-baseline="central">iR 3.7.1</text>
+  </g>
+  <!-- Text Stack -->
+  <text x="36" y="16" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="14" font-weight="600" fill="#E0E0E0" letter-spacing="-0.2">JasperRiskDetect</text>
+  <text x="36" y="28" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-size="9" font-weight="400" fill="#808080">Static Analysis for iReport 3.7.1</text>
+  <defs>
+    <linearGradient id="shieldGradFull" x1="14" y1="1" x2="14" y2="25" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2B3A4E"/>
+      <stop offset="1" stop-color="#1A2636"/>
+    </linearGradient>
+  </defs>
+</svg>

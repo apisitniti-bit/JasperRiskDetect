@@ -1,5 +1,9 @@
 # JasperRiskDetect
 
+<div align="center">
+  <img src="/frontend/public/logo/shield-report/logo-full.svg" alt="JasperRiskDetect Logo" width="200">
+</div>
+
 > ระบบวิเคราะห์ความเสี่ยง JasperReports สำหรับ iReport 3.7.1
 
 ---

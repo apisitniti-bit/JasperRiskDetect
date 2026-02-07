@@ -1,0 +1,25 @@
+<svg width="200" height="32" viewBox="0 0 200 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Jasper Crystal Hexagon -->
+  <g transform="translate(0, 4)">
+    <!-- Hexagon Shape -->
+    <path d="M12 2L20 7V17L12 22L4 17V7L12 2Z" fill="url(#crystalGradient)" stroke="#00bcd4" stroke-width="1"/>
+    <!-- Inner Facets -->
+    <path d="M12 2L12 22M4 7L20 7M4 17L20 17M6 9.5L18 9.5M6 14.5L18 14.5" stroke="#00a8b8" stroke-width="0.5" opacity="0.5"/>
+    <!-- Version 3.7.1 in facets -->
+    <text x="12" y="13" font-family="monospace" font-size="4" fill="#004d5c" text-anchor="middle" opacity="0.7">3.7.1</text>
+    <!-- Magnifying Glass -->
+    <circle cx="18" cy="18" r="5" fill="none" stroke="white" stroke-width="2"/>
+    <circle cx="18" cy="18" r="4" fill="none" stroke="white" stroke-width="1" opacity="0.5"/>
+    <line x1="22" y1="22" x2="26" y2="26" stroke="white" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <!-- Gradient Definition -->
+  <defs>
+    <linearGradient id="crystalGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00bcd4;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#008ba3;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Text -->
+  <text x="32" y="20" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="600" fill="#d4d4d4">JasperRiskDetect</text>
+  <text x="32" y="28" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#808080">iReport 3.7.1</text>
+</svg>

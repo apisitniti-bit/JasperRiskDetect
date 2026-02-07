@@ -1,0 +1,14 @@
+<svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="180" height="180" fill="#1A2636" rx="20"/>
+  <path d="M90 20L30 44V90C30 130 90 164 90 164S150 130 150 90V44L90 20Z" fill="url(#sgApple)" stroke="#5A8BBF" stroke-width="3"/>
+  <path d="M90 28L38 48V90C38 126 90 156 90 156S142 126 142 90V48L90 28Z" fill="none" stroke="#3D5A80" stroke-width="1" opacity="0.6"/>
+  <text x="90" y="82" font-family="system-ui,sans-serif" font-size="36" font-weight="700" fill="#FFFFFF" text-anchor="middle" dominant-baseline="central" letter-spacing="-1.5">JRD</text>
+  <rect x="52" y="102" width="76" height="24" rx="4" fill="#1A2636" stroke="#E0B830" stroke-width="1.5"/>
+  <text x="90" y="115" font-family="monospace" font-size="13" font-weight="500" fill="#C0B090" text-anchor="middle" dominant-baseline="central">iReport 3.7.1</text>
+  <defs>
+    <linearGradient id="sgApple" x1="90" y1="20" x2="90" y2="164" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2B3A4E"/>
+      <stop offset="1" stop-color="#1A2636"/>
+    </linearGradient>
+  </defs>
+</svg>
