@@ -2,11 +2,6 @@
   "name": "jasper-risk-detect",
   "version": "1.0.0",
   "private": true,
-  "workspaces": [
-    "frontend",
-    "engine",
-    "cli"
-  ],
   "scripts": {
     "dev": "turbo dev",
     "build": "turbo build",
@@ -14,7 +9,10 @@
     "test": "turbo test"
   },
   "devDependencies": {
-    "turbo": "^2.3.0"
+    "turbo": "2.3.0"
   },
-  "packageManager": "npm@10.2.0"
+  "packageManager": "pnpm@8.15.9",
+  "engines": {
+    "node": ">=18.0.0 <19.0.0"
+  }
 }
