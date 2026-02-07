@@ -6,10 +6,10 @@
     "detection": { "type": "structural", "config": { "check": "band-overflow" } },
     "risk_weight": 25,
     "thai": {
-      "title": "แถบ (Band) สูงเกินขนาดหน้ากระดาษ",
-      "cause": "ความสูงของ Band มากกว่าความสูงของหน้ากระดาษลบ margin บนและล่าง",
-      "impact": "ทำให้เกิด Java Heap Space error หรือหน้ากระดาษเสียหายเมื่อ render รายงาน",
-      "fix": "ลดความสูงของ Band หรือย้าย element บางส่วนไปยัง Band อื่น"
+      "title": "แถบ (Band) สูงเกินขนาดหน้ากระดาษ — ไม่สามารถ render ได้",
+      "cause": "ความสูงของ Band มากกว่าพื้นที่ใช้งานของหน้ากระดาษ (page height − margin บน − margin ล่าง) ทำให้ JasperReports ไม่สามารถวาง Band ลงในหน้าเดียวได้",
+      "impact": "รายงานจะ render ผิดพลาด element อาจหายไปหรือซ้อนทับกัน กรณีร้ายแรงอาจเกิด Java Heap Space error ทำให้ server หยุดทำงาน",
+      "fix": "1) ลดความสูงของ Band ให้น้อยกว่าพื้นที่ใช้งานของหน้า\n2) ย้าย element บางส่วนไปยัง Band อื่น (เช่น ย้าย label ไป columnHeader)\n3) ลด padding/spacing ระหว่าง element ภายใน Band\n4) พิจารณาแบ่งข้อมูลเป็น subreport ถ้า Band มี element เยอะมาก"
     },
     "autofix": { "available": true, "strategy": "band-height", "safe": true }
   },
@@ -34,10 +34,10 @@
     "detection": { "type": "element_count", "config": { "check": "memory-estimation", "threshold_kb": 100000 } },
     "risk_weight": 20,
     "thai": {
-      "title": "ประมาณการใช้หน่วยความจำสูงเกินเกณฑ์วิกฤต",
-      "cause": "จำนวนและประเภทของ element ในรายงานใช้หน่วยความจำมากเกินไป",
-      "impact": "เสี่ยง OutOfMemoryError เมื่อ render รายงาน โดยเฉพาะเมื่อมีข้อมูลมาก",
-      "fix": "ลดจำนวน element ในรายงาน หรือแยกเป็นหลาย subreport"
+      "title": "ประมาณการใช้หน่วยความจำต่อหน้าสูงเกินเกณฑ์วิกฤต",
+      "cause": "รายงานมี element จำนวนมาก แต่ละประเภทใช้หน่วยความจำต่างกัน (staticText ~2 KB, textField ~4 KB, image ~50 KB, subreport ~100 KB) เมื่อรวมทุก Band แล้วใช้หน่วยความจำเกินเกณฑ์",
+      "impact": "เมื่อข้อมูลมีหลายแถว หน่วยความจำจะเพิ่มขึ้นเป็นทวีคูณ เสี่ยง java.lang.OutOfMemoryError ทำให้ server หยุดทำงานและผู้ใช้คนอื่นได้รับผลกระทบ",
+      "fix": "1) ย้าย staticText ที่เป็น label ออกจาก detail band ไปใส่ columnHeader\n2) ลบ element ที่ไม่จำเป็นออก\n3) ลดขนาดรูปภาพที่ฝัง base64\n4) แยกเป็นหลาย subreport ถ้ามี element มากกว่า 50 ตัว"
     }
   },
   {
@@ -47,10 +47,10 @@
     "detection": { "type": "element_count", "config": { "check": "subreport-depth", "max_depth": 3 } },
     "risk_weight": 12,
     "thai": {
-      "title": "Subreport มากเกินไป",
-      "cause": "รายงานมี subreport จำนวนมาก แต่ละตัวใช้หน่วยความจำเพิ่มเป็นทวีคูณ",
-      "impact": "เสี่ยง Stack Overflow หรือ Heap Exhaustion เมื่อ render",
-      "fix": "ลดจำนวน subreport หรือรวม subreport ที่คล้ายกันเข้าด้วยกัน"
+      "title": "Subreport จำนวนมากหรือซ้อนลึกเกินไป",
+      "cause": "รายงานมี subreport จำนวนมากหรือซ้อนกันเกิน 3 ชั้น แต่ละ subreport ใช้หน่วยความจำสูง (~100 KB/ตัว) และสร้าง JasperReport object แยกต่างหาก",
+      "impact": "เสี่ยง StackOverflowError หรือ Heap Exhaustion เมื่อ render ทำให้ server หยุดทำงานกะทันหัน",
+      "fix": "1) รวม subreport ที่คล้ายกันเข้าด้วยกัน\n2) หลีกเลี่ยงการซ้อน subreport ใน subreport\n3) พิจารณาใช้ group band แทน subreport ถ้าเป็นไปได้"
     }
   },
   {
@@ -60,10 +60,10 @@
     "detection": { "type": "attribute_check", "config": { "check": "image-size", "max_kb": 500 } },
     "risk_weight": 10,
     "thai": {
-      "title": "รูปภาพ base64 ฝังขนาดใหญ่เกินไป",
-      "cause": "รูปภาพถูกฝังเป็น base64 ในไฟล์ JRXML ขนาดเกิน 500 KB",
-      "impact": "ใช้หน่วยความจำมากทุกหน้าที่พิมพ์ เสี่ยง Heap Spike",
-      "fix": "ใช้ไฟล์รูปภาพภายนอกแทนการฝัง base64 หรือลดขนาดรูปภาพ"
+      "title": "รูปภาพ base64 ฝังในรายงานมีขนาดใหญ่เกินไป",
+      "cause": "รูปภาพถูกฝังเป็น base64 string ในไฟล์ JRXML โดยตรง ขนาดเกิน 500 KB ทุกครั้งที่ render หน้า JasperReports จะโหลดรูปนี้เข้าหน่วยความจำใหม่",
+      "impact": "ถ้ารูปอยู่ใน band ที่วาดซ้ำ (เช่น detail, pageHeader) จะใช้หน่วยความจำเพิ่มทุกหน้า/แถว เสี่ยง Heap Space spike ทำให้รายงานสร้างช้าหรือ server ล่ม",
+      "fix": "1) เปลี่ยนจาก base64 เป็นอ้างอิงไฟล์ภายนอก (imagePath)\n2) ลดขนาด/ความละเอียดรูปภาพก่อนฝัง\n3) ถ้าเป็นโลโก้ที่ซ้ำทุกหน้า ให้ใช้ parameter ส่ง path เข้ามาแทน"
     }
   },
   {
@@ -73,10 +73,10 @@
     "detection": { "type": "structural", "config": { "check": "pagination-risk" } },
     "risk_weight": 22,
     "thai": {
-      "title": "ความเสี่ยงด้านจำนวนหน้ากระดาษ",
-      "cause": "แถบ detail มี element จำนวนมาก คูณจำนวนแถวข้อมูลที่คาดว่าจะมี",
-      "impact": "หน่วยความจำจะเพิ่มขึ้นตามจำนวนหน้า เสี่ยง Java Heap Space",
-      "fix": "ลดจำนวน element ต่อแถว หรือจำกัดจำนวนแถวข้อมูลต่อรายงาน"
+      "title": "ความเสี่ยงด้านหน้ากระดาษ — detail band ใช้หน่วยความจำสูงมาก",
+      "cause": "แถบ detail มี element จำนวนมากและมีความสูงมาก JasperReports จะสร้าง element ทุกตัวซ้ำทุกแถวข้อมูล เมื่อคูณกับจำนวนแถว (10,000+) หน่วยความจำจะเพิ่มขึ้นอย่างรวดเร็ว",
+      "impact": "รายงานสร้างช้ามาก (หลายนาที) อาจเกิด java.lang.OutOfMemoryError: Java heap space ทำให้ server หยุดทำงานและผู้ใช้คนอื่นได้รับผลกระทบ",
+      "fix": "1) ย้าย staticText (label) ออกจาก detail band ไปใส่ columnHeader — ลดการซ้ำได้ทันที\n2) ลดความสูงของ detail band ให้เหลือเท่าที่จำเป็น\n3) รวม element ที่ซ้ำซ้อนเข้าด้วยกัน\n4) แบ่ง report เป็น subreport ถ้า element ยังเยอะ"
     }
   },
   {
@@ -86,10 +86,10 @@
     "detection": { "type": "expression_pattern", "config": { "check": "expression-complexity", "max_ternary": 3 } },
     "risk_weight": 5,
     "thai": {
-      "title": "Expression ซับซ้อนเกินไป (ternary ซ้อน)",
-      "cause": "Expression มี ternary operator ซ้อนกันเกิน 3 ชั้น",
-      "impact": "เสี่ยงทำให้ compile ช้าหรือ timeout",
-      "fix": "แยก expression ออกเป็นหลาย variable หรือใช้ if-else ใน scriptlet"
+      "title": "Expression ซับซ้อนเกินไป — ternary ซ้อนหรือ concatenation ยาวมาก",
+      "cause": "Expression มี ternary operator (? :) ซ้อนกันเกิน 3 ชั้น หรือมีการต่อ String ด้วย + มากกว่า 10 ครั้ง ทำให้ JasperReports ต้องประมวลผลหนักทุกแถว",
+      "impact": "การ compile และ evaluate จะช้าลง อาจเกิด timeout เมื่อข้อมูลมีหลายแถว ทำให้รายงานไม่สามารถสร้างได้",
+      "fix": "1) แยก expression ออกเป็นหลาย variable แล้วอ้างอิง $V{} แทน\n2) ใช้ String.format() แทนการต่อ String ด้วย +\n3) ถ้าเงื่อนไขซับซ้อนมาก ให้ย้ายไป scriptlet (Java class)"
     }
   },
   {
@@ -99,10 +99,10 @@
     "detection": { "type": "element_count", "config": { "check": "field-count", "critical_threshold": 200 } },
     "risk_weight": 10,
     "thai": {
-      "title": "จำนวน Field มากเกินไป",
-      "cause": "รายงานมี field เกิน 200 ตัว แต่ละ field ใช้หน่วยความจำต่อแถวข้อมูล",
-      "impact": "เสี่ยง OutOfMemoryError เมื่อข้อมูลมีจำนวนแถวมาก",
-      "fix": "ลบ field ที่ไม่จำเป็นออก หรือแยกรายงานออกเป็นหลายชุด"
+      "title": "จำนวน Field มากเกินไป — เสี่ยงหน่วยความจำสูง",
+      "cause": "รายงานมี field เกิน 200 ตัว แต่ละ field จะถูกเก็บค่าทุกแถวข้อมูล ทำให้ใช้หน่วยความจำต่อแถวสูงมาก",
+      "impact": "เมื่อข้อมูลมีหลายพันแถว หน่วยความจำจะเพิ่มขึ้นอย่างรวดเร็ว เสี่ยง OutOfMemoryError",
+      "fix": "1) ลบ field ที่ไม่ได้ใช้งานจริงออก\n2) แยกรายงานเป็นหลายชุดโดยแต่ละชุดใช้ field เฉพาะที่จำเป็น\n3) ตรวจสอบว่า field ทุกตัวมีการอ้างอิงจริงใน expression"
     }
   },
   {
@@ -112,10 +112,10 @@
     "detection": { "type": "structural", "config": { "check": "variable-dependency" } },
     "risk_weight": 25,
     "thai": {
-      "title": "Variable อ้างอิงวนรอบ (Circular Dependency)",
-      "cause": "Variable อ้างอิงถึงกันเป็นวงกลม เช่น A -> B -> C -> A",
-      "impact": "ทำให้เกิด infinite loop ขณะ compile หรือ evaluate expression",
-      "fix": "แก้ไข expression ของ variable ให้ไม่เกิดการอ้างอิงวนรอบ"
+      "title": "Variable อ้างอิงวนรอบ (Circular Dependency) — เสี่ยง infinite loop",
+      "cause": "Variable อ้างอิงถึงกันเป็นวงกลม (เช่น $V{A} อ้างอิง $V{B} ที่อ้างอิง $V{A} กลับ) ทำให้ JasperReports คำนวณไม่สิ้นสุด",
+      "impact": "เกิด infinite loop ขณะ compile หรือ evaluate expression ทำให้ server ค้างจนกว่าจะ timeout หรือหยุดทำงาน",
+      "fix": "1) ตรวจสอบว่า variable ตัวไหนอ้างอิงวนรอบ (A→B→A)\n2) แก้ไข expression ให้อ้างอิงเป็นทิศทางเดียว (A→B→C)\n3) ใช้ field โดยตรงแทน variable ถ้าไม่จำเป็นต้องคำนวณ"
     }
   },
   {
@@ -125,10 +125,10 @@
     "detection": { "type": "element_count", "config": { "check": "group-nesting", "max_depth": 5 } },
     "risk_weight": 10,
     "thai": {
-      "title": "กลุ่ม (Group) ซ้อนกันมากเกินไป",
-      "cause": "รายงานมีกลุ่มซ้อนกันเกิน 5 ชั้น",
-      "impact": "แต่ละชั้นของกลุ่มเพิ่มการใช้หน่วยความจำเป็นทวีคูณ",
-      "fix": "ลดจำนวนชั้นของกลุ่ม หรือรวมกลุ่มที่ไม่จำเป็นเข้าด้วยกัน"
+      "title": "กลุ่ม (Group) ซ้อนกันมากเกินไป — เพิ่มหน่วยความจำทวีคูณ",
+      "cause": "รายงานมี group ซ้อนกันเกิน 5 ชั้น แต่ละชั้นมี groupHeader + groupFooter ที่มี element ของตัวเอง เพิ่มหน่วยความจำเป็นทวีคูณ",
+      "impact": "รายงานจะช้ามากและใช้หน่วยความจำสูง เสี่ยง Heap Exhaustion เมื่อข้อมูลมีหลายกลุ่ม",
+      "fix": "1) รวม group ที่คล้ายกันเข้าด้วยกัน\n2) ลดจำนวนชั้นให้เหลือไม่เกิน 5 ชั้น\n3) พิจารณาแยกเป็น subreport ถ้ามี group ซ้อนมาก"
     }
   },
   {

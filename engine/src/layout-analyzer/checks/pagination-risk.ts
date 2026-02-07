@@ -30,6 +30,23 @@ export function checkPaginationRisk(ast: JrxmlAst): LayoutFinding[] {
     const allLabels = detail.elements.map((e) => getElementLabel(e));
     const elSummary = allLabels.slice(0, 3).join(", ") + (allLabels.length > 3 ? ` +${allLabels.length - 3}` : "");
 
+    // Phase 2: staticText risk ranking — rank by area (width×height) descending
+    const staticTexts = detail.elements
+      .filter((e) => e.type === "staticText")
+      .map((e) => ({
+        label: getElementLabel(e),
+        area: e.width * e.height,
+        width: e.width,
+        height: e.height,
+      }))
+      .sort((a, b) => b.area - a.area);
+
+    const staticTextRanking = staticTexts.map((st, i) => ({
+      rank: i + 1,
+      label: st.label,
+      reason: `อยู่ใน detail band ขนาด ${st.width}×${st.height} px — ถูกวาดซ้ำ ${ASSUMED_MAX_ROWS.toLocaleString()} ครั้ง ควรย้ายไป columnHeader`,
+    }));
+
     if (estimatedMemoryMB >= CRITICAL_THRESHOLD_MB) {
       findings.push({
         check_id: "LAYOUT-006",
@@ -46,6 +63,7 @@ export function checkPaginationRisk(ast: JrxmlAst): LayoutFinding[] {
           estimated_memory_mb: estimatedMemoryMB,
           rows_per_page: rowsPerPage,
           elements: allLabels,
+          static_text_ranking: staticTextRanking,
         },
       });
     } else if (estimatedMemoryMB >= WARN_THRESHOLD_MB) {
@@ -64,6 +82,7 @@ export function checkPaginationRisk(ast: JrxmlAst): LayoutFinding[] {
           estimated_memory_mb: estimatedMemoryMB,
           rows_per_page: rowsPerPage,
           elements: allLabels,
+          static_text_ranking: staticTextRanking,
         },
       });
     }

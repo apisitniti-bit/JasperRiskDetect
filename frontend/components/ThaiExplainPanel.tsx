@@ -80,6 +80,9 @@ export default function ThaiExplainPanel({ finding }: ThaiExplainPanelProps) {
 
         {/* Full element listing from details */}
         <ElementListing elements={getElementsFromDetails(finding)} />
+
+        {/* staticText risk ranking (Phase 2) */}
+        <StaticTextRanking ranking={getStaticTextRanking(finding)} />
       </div>
     </div>
   );
@@ -90,6 +93,44 @@ function getElementsFromDetails(finding: Finding): string[] {
   const els = finding.details["elements"];
   if (Array.isArray(els)) return els.map(String);
   return [];
+}
+
+function getStaticTextRanking(finding: Finding): { rank: number; label: string; reason: string }[] {
+  if (!finding.details) return [];
+  const ranking = finding.details["static_text_ranking"];
+  if (!Array.isArray(ranking)) return [];
+  return ranking as { rank: number; label: string; reason: string }[];
+}
+
+function StaticTextRanking({ ranking }: { ranking: { rank: number; label: string; reason: string }[] }) {
+  const [open, setOpen] = useState(false);
+
+  if (ranking.length === 0) return null;
+
+  return (
+    <div className="rounded bg-ide-bg px-3 py-2">
+      <button
+        type="button"
+        onClick={() => setOpen((p) => !p)}
+        className="flex w-full items-center gap-1.5 text-sm font-semibold text-orange-400 hover:text-orange-300"
+      >
+        <ChevronRight className={`h-3 w-3 shrink-0 transition-transform duration-150 ${open ? "rotate-90" : ""}`} />
+        <span>ควรแก้ก่อน — staticText ({ranking.length})</span>
+      </button>
+      {open && (
+        <ul className="mt-2 max-h-56 space-y-2 overflow-y-auto pl-4">
+          {ranking.map((item) => (
+            <li key={item.rank}>
+              <div className="text-xs font-semibold text-ide-text">
+                อันดับ {item.rank}: <code className="font-mono text-sky-300">{item.label}</code>
+              </div>
+              <div className="text-xs text-ide-text-muted">{item.reason}</div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
 }
 
 function ElementListing({ elements }: { elements: string[] }) {
