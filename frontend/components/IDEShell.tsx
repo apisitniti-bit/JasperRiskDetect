@@ -129,7 +129,7 @@ export default function IDEShell() {
 
           {/* Bottom Panel: Thai Explain */}
           <div className="h-52 shrink-0 overflow-hidden">
-            <ThaiExplainPanel finding={selectedFinding} />
+            <ThaiExplainPanel finding={selectedFinding} jrxmlContent={jrxmlContent} />
           </div>
         </div>
 

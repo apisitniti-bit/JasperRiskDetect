@@ -3,12 +3,14 @@
 import { useState } from "react";
 import { BookOpen, ArrowRight, Wrench, Zap, ChevronRight, List } from "lucide-react";
 import type { Finding } from "../lib/types";
+import ErrorPreviewCard from "./ErrorPreviewCard";
 
 interface ThaiExplainPanelProps {
   finding: Finding | null;
+  jrxmlContent?: string | null;
 }
 
-export default function ThaiExplainPanel({ finding }: ThaiExplainPanelProps) {
+export default function ThaiExplainPanel({ finding, jrxmlContent }: ThaiExplainPanelProps) {
   if (!finding) {
     return (
       <div className="flex h-full flex-col">
@@ -83,6 +85,11 @@ export default function ThaiExplainPanel({ finding }: ThaiExplainPanelProps) {
 
         {/* staticText risk ranking (Phase 2) */}
         <StaticTextRanking ranking={getStaticTextRanking(finding)} />
+
+        {/* Error Visual Preview & Screenshot */}
+        {jrxmlContent && finding.line && (
+          <ErrorPreviewCard finding={finding} jrxmlContent={jrxmlContent} />
+        )}
       </div>
     </div>
   );
