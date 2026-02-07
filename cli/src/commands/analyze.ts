@@ -45,8 +45,8 @@ async function analyzeFile(absPath: string): Promise<FileResult> {
 
   // Lazy-load engine modules to avoid hard dependency at parse time
   let detectVersion: Function;
-  let parseJrxml: Function;
-  let analyzeLayout: Function;
+  let parseJrxml: Function | null;
+  let analyzeLayout: Function | null;
   let scoreFindings: Function;
 
   try {
